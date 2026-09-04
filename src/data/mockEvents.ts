@@ -1,4 +1,5 @@
 import { EventItem } from '../types/event';
+import { getRelativeDate } from '../utils/dateUtils';
 
 export const mockEvents: EventItem[] = [
   {
@@ -7,7 +8,7 @@ export const mockEvents: EventItem[] = [
     slug: 'healing-reiki-circle',
     category: 'reiki',
     categoryName: '🌿 Рейкі',
-    date: '3 вересня',
+    ...getRelativeDate(0), // Сьогодні
     time: '20:00 (Київ)',
     durationMinutes: 75,
     platform: 'Zoom',
@@ -55,7 +56,7 @@ export const mockEvents: EventItem[] = [
     slug: 'evening-mindfulness-peace',
     category: 'meditation',
     categoryName: '🧘 Медитації',
-    date: '4 вересня',
+    ...getRelativeDate(1), // Завтра
     time: '21:00 (Київ)',
     durationMinutes: 50,
     platform: 'YouTube Live',
@@ -97,7 +98,7 @@ export const mockEvents: EventItem[] = [
     slug: 'sound-bath-tibetan-bowls',
     category: 'sound',
     categoryName: '🔔 Звукотерапія',
-    date: '5 вересня',
+    ...getRelativeDate(2), // Через 2 дні
     time: '19:30 (Київ)',
     durationMinutes: 90,
     platform: 'Zoom HD Audio',
@@ -138,7 +139,7 @@ export const mockEvents: EventItem[] = [
     slug: 'energy-detox-aura-clearing',
     category: 'energy',
     categoryName: '🔮 Енергопрактики',
-    date: '6 вересня',
+    ...getRelativeDate(3), // Через 3 дні
     time: '18:00 (Київ)',
     durationMinutes: 70,
     platform: 'Zoom',
@@ -179,7 +180,7 @@ export const mockEvents: EventItem[] = [
     slug: 'pranayama-breathwork-awakening',
     category: 'breath',
     categoryName: '🌬 Дихання',
-    date: '7 вересня',
+    ...getRelativeDate(4), // Через 4 дні
     time: '09:00 (Київ)',
     durationMinutes: 60,
     platform: 'Google Meet',
@@ -219,7 +220,7 @@ export const mockEvents: EventItem[] = [
     slug: 'womens-sacred-circle',
     category: 'women_circle',
     categoryName: '🌸 Жіночі кола',
-    date: '8 вересня',
+    ...getRelativeDate(5), // Через 5 днів
     time: '19:00 (Київ)',
     durationMinutes: 90,
     platform: 'Zoom',
@@ -252,5 +253,156 @@ export const mockEvents: EventItem[] = [
     },
     isFeatured: false,
     viewsCount: 460
+  },
+  {
+    id: '7',
+    title: 'Йога-нідра при свічках: Глибоке відновлення та перезавантаження',
+    slug: 'yoga-nidra-candlelight',
+    category: 'yoga',
+    categoryName: '🧘 Йога',
+    ...getRelativeDate(2), // Через 2 дні
+    time: '20:30 (Київ)',
+    durationMinutes: 60,
+    platform: 'Zoom',
+    platformUrl: 'https://zoom.us/j/example-yoga-nidra',
+    priceType: 'donation',
+    priceFormatted: 'Вільний донейшн',
+    priceAmount: 0,
+    bannerUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
+    description: `Йога психічного сну — це стан між неспанням та сном, у якому тіло відпочиває так само глибоко, як за 4 години звичайного сну.
+
+Практика спрямована на перезавантаження нервової системи, зняття хронічної втоми та інтеграцію санкальпи (глибокого наміру душі).`,
+    programSteps: [
+      'Підготовка простору та зручне положення Шавасани (10 хв)',
+      'Ротація свідомості по тілу та дихання (25 хв)',
+      'Візуалізація символів та пробудження санкальпи (15 хв)',
+      'Мʼяке пробудження та чаювання (10 хв)'
+    ],
+    preparationTips: [
+      { icon: '🕯', text: 'Жива свічка у полі зору перед сном' },
+      { icon: '🛋', text: 'Теплий плед та зручний валик під шию або коліна' },
+      { icon: '🎧', text: 'Навушники для комфортного сприйняття голосу' }
+    ],
+    master: {
+      id: 'm7',
+      name: 'Катерина Жива',
+      title: 'Викладач традиційної йоги та йога-терапевт',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
+      bio: 'Навчаю слухати тишу між думками та відновлювати життєву силу природним шляхом.',
+      experienceYears: 9
+    },
+    isFeatured: true,
+    viewsCount: 380
+  },
+  {
+    id: '8',
+    title: 'Кундаліні-активація: Підйом життєвої сили та ясності',
+    slug: 'kundalini-activation-energy',
+    category: 'energy',
+    categoryName: '🔮 Енергопрактики',
+    ...getRelativeDate(6), // Через 6 днів (останній день 7-денного вікна)
+    time: '18:30 (Київ)',
+    durationMinutes: 80,
+    platform: 'Zoom',
+    platformUrl: 'https://zoom.us/j/example-kundalini',
+    priceType: 'fixed',
+    priceFormatted: '500 ₴',
+    priceAmount: 500,
+    bannerUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=1200&q=80',
+    description: `Пряма передача енергії життєвої сили для активації власного внутрішнього потенціалу, розблокування скутих емоцій та відчуття чистого творчого потоку.`,
+    programSteps: [
+      'Налаштування на енергетичну частоту простору (15 хв)',
+      'Активація через спеціальні музичні частоти та подих (45 хв)',
+      'Заземлення та інтеграція нового стану (20 хв)'
+    ],
+    preparationTips: [
+      { icon: '🧘', text: 'Повністю вільний простір для рухів тіла' },
+      { icon: '💧', text: 'Пляшка чистої води' },
+      { icon: '🔕', text: 'Усамітнення під час практики' }
+    ],
+    master: {
+      id: 'm8',
+      name: 'Олексій Промінь',
+      title: 'Фасилітатор KAP (Kundalini Activation Process)',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+      bio: 'Провів понад 300 енергетичних сесій в Україні та Європі, допомагаючи людям відчути свою справжню силу.',
+      experienceYears: 6
+    },
+    isFeatured: false,
+    viewsCount: 520
+  },
+  {
+    id: '9',
+    title: 'Шаманська подорож під бубон: Пошук тотемної сили та мудрості роду',
+    slug: 'shamanic-journey-drum',
+    category: 'meditation',
+    categoryName: '🧘 Медитації',
+    ...getRelativeDate(9), // Через 9 днів (поза межами 7 днів)
+    time: '19:00 (Київ)',
+    durationMinutes: 90,
+    platform: 'Zoom HD Audio',
+    platformUrl: 'https://zoom.us/j/example-shamanic',
+    priceType: 'fixed',
+    priceFormatted: '450 ₴',
+    priceAmount: 450,
+    bannerUrl: 'https://images.unsplash.com/photo-1511295742362-92c96b124e52?auto=format&fit=crop&w=1200&q=80',
+    description: `Архетипова подорож під ритм шаманського бубна у Нижній Світ для зустрічі зі своїм тотемним провідником та отримання сили для подолання життєвих викликів.`,
+    programSteps: [
+      'Створення сакрального кола чотирьох сторін світу (15 хв)',
+      'Подорож під ритмічне звучання бубна (45 хв)',
+      'Повернення, закріплення інсайтів та малювання образу (30 хв)'
+    ],
+    preparationTips: [
+      { icon: '👁', text: 'Щільна повʼязка на очі для повної темряви' },
+      { icon: '📝', text: 'Папір і кольорові олівці' },
+      { icon: '🕯', text: 'Свічка' }
+    ],
+    master: {
+      id: 'm9',
+      name: 'Тарас Світовид',
+      title: 'Провідник шаманських практик та соматичний терапевт',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+      bio: 'Досліджую давні трансові традиції та їхній цілющий вплив на сучасну психіку.',
+      experienceYears: 11
+    },
+    isFeatured: false,
+    viewsCount: 340
+  },
+  {
+    id: '10',
+    title: 'Голосова терапія: Звільнення природного звучання та горлової чакри',
+    slug: 'vocal-therapy-throat-chakra',
+    category: 'sound',
+    categoryName: '🔔 Звукотерапія',
+    ...getRelativeDate(12), // Через 12 днів (поза межами 7 днів)
+    time: '18:00 (Київ)',
+    durationMinutes: 75,
+    platform: 'Google Meet',
+    platformUrl: 'https://meet.google.com/example-vocal',
+    priceType: 'donation',
+    priceFormatted: 'Вільний донейшн',
+    priceAmount: 0,
+    bannerUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1200&q=80',
+    description: `Голос — найшвидший інструмент розблокування тіла. Коли ми звучимо вільно, ми відпускаємо невисловлені образи, страх засудження та повертаємо сміливість заявляти про себе світові.`,
+    programSteps: [
+      'Зняття затисків щелепи та діафрагми (15 хв)',
+      'Інтуїтивне інтонування та прозвучування чакр (35 хв)',
+      'Спільне гармонійне коло звуку онлайн (25 хв)'
+    ],
+    preparationTips: [
+      { icon: '💧', text: 'Тепла вода з лимоном' },
+      { icon: '🪑', text: 'Зручна поза з прямою спиною' },
+      { icon: '🚪', text: 'Простір, де ви можете звучати вголос без сорому' }
+    ],
+    master: {
+      id: 'm10',
+      name: 'Лада Голосна',
+      title: 'Голосовий терапевт, співачка, етно-музикант',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+      bio: 'Допомагаю віднайти автентичний голос і довіру до свого внутрішнього звучання.',
+      experienceYears: 8
+    },
+    isFeatured: false,
+    viewsCount: 290
   }
 ];

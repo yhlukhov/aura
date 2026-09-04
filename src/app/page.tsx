@@ -1,19 +1,20 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import HeroSection from '@/components/HeroSection';
 import CategoryFilters from '@/components/CategoryFilters';
 import EventCard from '@/components/EventCard';
 import { mockEvents } from '@/data/mockEvents';
-import { EventCategory } from '@/types/event';
-import { Sparkles, Calendar } from 'lucide-react';
+import { EventCategory, EventItem } from '@/types/event';
+import { Calendar, RefreshCw } from 'lucide-react';
+import { getEventsForNext7Days, pickRandomEvents } from '@/utils/dateUtils';
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<EventCategory>('all');
   const [priceFilter, setPriceFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Фільтрація подій
+  // Фільтрація подій для каталогу
   const filteredEvents = useMemo(() => {
     return mockEvents.filter((item) => {
       // 1. Категорія
@@ -39,10 +40,21 @@ export default function HomePage() {
     });
   }, [selectedCategory, priceFilter, searchQuery]);
 
-  // Топ-події (рекламні місця для майстрів)
-  const featuredEvents = useMemo(() => {
-    return mockEvents.filter((e) => e.isFeatured);
+  // Події тижня (Week Events): 3 випадкові події на найближчі 7 днів (включаючи сьогодні)
+  const [weekEvents, setWeekEvents] = useState<EventItem[]>(() => {
+    const next7Days = getEventsForNext7Days(mockEvents);
+    return next7Days.slice(0, 3);
+  });
+
+  useEffect(() => {
+    const next7Days = getEventsForNext7Days(mockEvents);
+    setWeekEvents(pickRandomEvents(next7Days, 3));
   }, []);
+
+  const handleShuffleWeekEvents = () => {
+    const next7Days = getEventsForNext7Days(mockEvents);
+    setWeekEvents(pickRandomEvents(next7Days, 3));
+  };
 
   return (
     <div className="space-y-12 pb-24">
@@ -52,24 +64,37 @@ export default function HomePage() {
         onSearchChange={setSearchQuery}
       />
 
-      {/* 2. СЕКЦІЯ ТОП-ПОДІЙ (Вибір провідників / Рекламний блок) */}
-      {!searchQuery && selectedCategory === 'all' && priceFilter === 'all' && (
-        <section className="max-w-7xl mx-auto px-6" id="featured">
+      {/* 2. СЕКЦІЯ ПОДІЙ ТИЖНЯ (Week Events - 3 випадкові події на найближчі 7 днів) */}
+      {!searchQuery && selectedCategory === 'all' && priceFilter === 'all' && weekEvents.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6" id="week-events" aria-label="Week Events">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-full bg-gold-light text-gold">
-                <Sparkles className="w-4 h-4" />
+            <div className="flex items-center gap-2.5">
+              <span className="p-1.5 rounded-full bg-sage-light text-sage-dark">
+                <Calendar className="w-4 h-4" />
               </span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-deep">
-                Топ події тижня
+                Події тижня
               </h2>
             </div>
-            <span className="text-xs text-deep-muted">Рекомендовані практики</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-deep-muted hidden sm:inline-block">
+                Week Events • 3 випадкові практики на найближчі 7 днів
+              </span>
+              <button
+                type="button"
+                onClick={handleShuffleWeekEvents}
+                title="Оновити вибір подій"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-deep-muted hover:text-deep bg-white/80 hover:bg-white border border-sand hover:border-sage/40 transition shadow-2xs group cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5 text-sage group-hover:rotate-180 transition-transform duration-500" />
+                <span>Оновити вибір</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredEvents.map((item) => (
-              <EventCard key={`featured-${item.id}`} event={item} />
+            {weekEvents.map((item) => (
+              <EventCard key={`week-${item.id}`} event={item} />
             ))}
           </div>
         </section>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, Plus, Compass } from 'lucide-react';
+import { Sparkles, Plus, Compass, Calendar } from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -20,9 +20,9 @@ export default function Navbar() {
             <Compass className="w-4 h-4 text-sage" />
             Каталог практик
           </Link>
-          <Link href="/#featured" className="hover:text-sage-dark transition flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-gold" />
-            Топ події
+          <Link href="/#week-events" className="hover:text-sage-dark transition flex items-center gap-1.5">
+            <Calendar className="w-4 h-4 text-sage" />
+            Події тижня
           </Link>
           <Link href="/create" className="hover:text-sage-dark transition">
             Організаторам
