@@ -8,7 +8,6 @@ interface AmbientBannerProps {
   title: string;
   categoryName: string;
   dateBadge?: string;
-  isFeatured?: boolean;
 }
 
 export default function AmbientBanner({
@@ -16,7 +15,6 @@ export default function AmbientBanner({
   title,
   categoryName,
   dateBadge,
-  isFeatured,
 }: AmbientBannerProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -54,11 +52,6 @@ export default function AmbientBanner({
           <span className="bg-black/40 backdrop-blur-md text-white text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/20">
             {categoryName}
           </span>
-          {isFeatured && (
-            <span className="bg-gold text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-gold-glow flex items-center gap-1">
-              <span>⭐</span> Топ подія
-            </span>
-          )}
         </div>
 
         {dateBadge && (

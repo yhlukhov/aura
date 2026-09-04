@@ -11,11 +11,7 @@ export default function EventCard({ event }: EventCardProps) {
   return (
     <Link
       href={`/events/${event.id}`}
-      className={`group relative flex flex-col rounded-3xl p-4 bg-white/90 backdrop-blur border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-        event.isFeatured
-          ? 'border-gold/50 shadow-gold-glow/20 ring-1 ring-gold/20'
-          : 'border-sand hover:border-sage/40 shadow-sm'
-      }`}
+      className="group relative flex flex-col rounded-3xl p-4 bg-white/90 backdrop-blur border border-sand hover:border-sage/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
       {/* 1. БАНЕР КАРТКИ */}
       <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden mb-4 bg-sand-dark/20">
@@ -35,11 +31,6 @@ export default function EventCard({ event }: EventCardProps) {
           <span className="bg-white/90 backdrop-blur-md text-deep text-[11px] font-semibold px-3 py-1 rounded-full shadow-xs">
             {event.categoryName}
           </span>
-          {event.isFeatured && (
-            <span className="bg-gold text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
-              ⭐ Топ
-            </span>
-          )}
         </div>
 
         {/* Дата знизу банера */}

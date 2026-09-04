@@ -47,7 +47,6 @@ export const mockEvents: EventItem[] = [
       experienceYears: 8,
       telegram: '@elena_vaira'
     },
-    isFeatured: true,
     viewsCount: 428
   },
   {
@@ -89,7 +88,6 @@ export const mockEvents: EventItem[] = [
       experienceYears: 10,
       instagram: '@danylo.peace'
     },
-    isFeatured: false,
     viewsCount: 689
   },
   {
@@ -130,7 +128,6 @@ export const mockEvents: EventItem[] = [
       bio: 'Створюю звукові ландшафти, які повертають до відчуття дому всередині. Авторка авторських аудіо-подорожей.',
       experienceYears: 6
     },
-    isFeatured: true,
     viewsCount: 512
   },
   {
@@ -171,7 +168,6 @@ export const mockEvents: EventItem[] = [
       bio: 'Працюю з тонким планом, поєднуючи давні словʼянські та ведичні знання про енергетичну анатомію людини.',
       experienceYears: 12
     },
-    isFeatured: false,
     viewsCount: 310
   },
   {
@@ -211,7 +207,6 @@ export const mockEvents: EventItem[] = [
       bio: 'Понад 7 років навчаю людей дихати повноцінно і вільно, знімаючи хронічні блоки у грудях та діафрагмі.',
       experienceYears: 7
     },
-    isFeatured: true,
     viewsCount: 395
   },
   {
@@ -251,7 +246,6 @@ export const mockEvents: EventItem[] = [
       bio: 'Бережно тримаю простір для жінок понад 5 років, допомагаючи зцілювати стосунки з собою та відчувати силу роду.',
       experienceYears: 5
     },
-    isFeatured: false,
     viewsCount: 460
   },
   {
@@ -291,7 +285,6 @@ export const mockEvents: EventItem[] = [
       bio: 'Навчаю слухати тишу між думками та відновлювати життєву силу природним шляхом.',
       experienceYears: 9
     },
-    isFeatured: true,
     viewsCount: 380
   },
   {
@@ -328,7 +321,6 @@ export const mockEvents: EventItem[] = [
       bio: 'Провів понад 300 енергетичних сесій в Україні та Європі, допомагаючи людям відчути свою справжню силу.',
       experienceYears: 6
     },
-    isFeatured: false,
     viewsCount: 520
   },
   {
@@ -365,7 +357,6 @@ export const mockEvents: EventItem[] = [
       bio: 'Досліджую давні трансові традиції та їхній цілющий вплив на сучасну психіку.',
       experienceYears: 11
     },
-    isFeatured: false,
     viewsCount: 340
   },
   {
@@ -402,7 +393,6 @@ export const mockEvents: EventItem[] = [
       bio: 'Допомагаю віднайти автентичний голос і довіру до свого внутрішнього звучання.',
       experienceYears: 8
     },
-    isFeatured: false,
     viewsCount: 290
   }
 ];

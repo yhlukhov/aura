@@ -71,7 +71,6 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
         bannerUrl={event.bannerUrl}
         title={event.title}
         categoryName={event.categoryName}
-        isFeatured={event.isFeatured}
       />
 
       {/* 2. ЗАГОЛОВОК ТА ШВИДКА ІНФО-СТРІЧКА */}

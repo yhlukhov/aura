@@ -48,7 +48,6 @@ export default function CreateEventPage() {
   );
   const [masterName, setMasterName] = useState('Марія Світло');
   const [masterTitle, setMasterTitle] = useState('Майстер Рейкі, цілителька');
-  const [isFeatured, setIsFeatured] = useState(true);
 
   const [previewTab, setPreviewTab] = useState<'card' | 'banner'>('card');
   const [isSuccess, setIsSuccess] = useState(false);
@@ -79,7 +78,6 @@ export default function CreateEventPage() {
       title: masterTitle || 'Спеціалізація',
       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
     },
-    isFeatured,
   };
 
   const handleCategoryChange = (cat: EventCategory, name: string) => {
@@ -352,38 +350,6 @@ export default function CreateEventPage() {
               </div>
             </div>
 
-            {/* 4. Рекламні опції (Монетизація / Промо) */}
-            <div className="p-6 rounded-3xl bg-gold-light/40 border border-gold/30 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-gold-dark">
-                  <Sparkles className="w-5 h-5" />
-                  <h4 className="font-serif text-lg font-bold">
-                    Промоція події на платформі
-                  </h4>
-                </div>
-                <span className="text-xs bg-gold text-white px-2.5 py-0.5 rounded-full font-bold">
-                  PROMO
-                </span>
-              </div>
-
-              <label className="flex items-start gap-3 p-3 bg-white/90 rounded-2xl border border-gold/30 cursor-pointer hover:border-gold transition">
-                <input
-                  type="checkbox"
-                  checked={isFeatured}
-                  onChange={(e) => setIsFeatured(e.target.checked)}
-                  className="mt-1 accent-gold w-4 h-4 rounded"
-                />
-                <div className="text-xs">
-                  <span className="font-semibold text-deep block">
-                    Закріпити у блоці «⭐ Топ події тижня» на головній сторінці
-                  </span>
-                  <span className="text-deep-muted">
-                    Ваша подія розміщується на перших позиціях у спеціальному золотому оформленні та отримує в 4 рази більше реєстрацій.
-                  </span>
-                </div>
-              </label>
-            </div>
-
             <button
               type="submit"
               className="w-full py-4 rounded-full bg-sage text-white font-semibold text-sm hover:bg-sage-dark transition shadow-md shadow-sage/25 flex items-center justify-center gap-2"
@@ -446,7 +412,6 @@ export default function CreateEventPage() {
                     title={previewEvent.title}
                     categoryName={previewEvent.categoryName}
                     dateBadge={`${previewEvent.date}, ${previewEvent.time}`}
-                    isFeatured={previewEvent.isFeatured}
                   />
                 </div>
               )}

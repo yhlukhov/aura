@@ -46,6 +46,5 @@ export interface EventItem {
   programSteps?: string[];
   preparationTips: PreparationTip[];
   master: Master;
-  isFeatured?: boolean;
   viewsCount?: number;
 }
