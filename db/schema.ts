@@ -1,7 +1,7 @@
 import {
   pgTable,
   pgEnum,
-  serial,
+  smallserial,
   text,
   timestamp,
   integer,
@@ -19,7 +19,7 @@ export const languageEnum = pgEnum('channel_language', [
 
 // Таблиця каналів
 export const channels = pgTable('channels', {
-  id: serial('id').primaryKey(),
+  id: smallserial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull(),
   author: varchar('author', { length: 255 }).notNull(),
@@ -34,7 +34,7 @@ export const channels = pgTable('channels', {
 
 // Таблиця лінків
 export const links = pgTable('links', {
-  id: serial('id').primaryKey(),
+  id: smallserial('id').primaryKey(),
   channelId: integer('channel_id').references(() => channels.id, {
     onDelete: 'cascade',
   }),
