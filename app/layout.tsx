@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aura space",
-  description: "Spiritual growth, meditation platform",
+  title: "AURA ✦ Простір духовних практик та медитацій",
+  description:
+    "Сучасна платформа для анонсування, пошуку та промоції каналів та подій у сфері медитацій, Рейкі, звукотерапії та енергопрактик.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -5,6 +5,7 @@
     "": {
       "name": "aura",
       "dependencies": {
+        "@animateicons/react": "^0.12.0",
         "@stylexjs/stylex": "^0.19.1",
         "next": "16.4.0",
         "react": "19.3.0",
@@ -26,6 +27,8 @@
     "sharp",
   ],
   "packages": {
+    "@animateicons/react": ["@animateicons/react@0.12.0", "", { "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-7gcoYAqLZ4mGLbsSqU+254Qd1RTIW7WIiYVR0BlzTHY/Yb813R5iFKyPV3a2hA6GALTUC63zRWV2s+6Bt5QqyA=="],
+
     "@babel/code-frame": ["@babel/code-frame@7.29.7", "", { "dependencies": { "@babel/helper-validator-identifier": "^7.29.7", "js-tokens": "^4.0.0", "picocolors": "^1.1.1" } }, "sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw=="],
 
     "@babel/compat-data": ["@babel/compat-data@7.29.7", "", {}, "sha512-locTkQyKvwIEgBzVrn8693ebc97F2U8ZHjbXwDXJ5Fn2TCpNwTlKcaKLkdHop5c/icOFE7qt7Q9JC5hnKNa6Gg=="],

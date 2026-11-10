@@ -20,6 +20,19 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Database
+
+The Neon client is exported from `db/index.ts`. Set `DATABASE_URL_POOLED` to the pooled Neon connection string for application queries and `DATABASE_URL` to the direct connection string for Drizzle Kit migrations. Keep both values in `.env`, which is ignored by Git.
+
+Add tables to `db/schema.ts`, then generate and apply migrations with:
+
+```bash
+bun run db:generate
+bun run db:migrate
+```
+
+Run `bun run db:studio` to open Drizzle Studio.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -27,7 +40,7 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js)
 
 ## Deploy on Vercel
 
