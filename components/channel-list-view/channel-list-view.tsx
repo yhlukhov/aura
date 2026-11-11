@@ -1,16 +1,14 @@
 'use client'
 
-import Link from 'next/link'
+import { Header } from './header'
 import type { Channel } from '@/db/schema'
+import { ChannelList } from './channel-list'
 
 export function ChannelListView({ channels }: { channels: Channel[] }) {
   return (
-    <ul>
-      {channels.map((channel) => (
-        <li key={channel.id}>
-          <Link href={`/channel/${channel.id}`}>{channel.name}</Link>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <Header />
+      <ChannelList channels={channels} />
+    </div>
   )
 }
