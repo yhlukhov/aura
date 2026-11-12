@@ -25,7 +25,7 @@ export const channels = pgTable('channels', {
   author: varchar('author', { length: 255 }).notNull(),
   description: text('description').notNull(),
   price: priceEnum('price').default('free'),
-  atAddress: varchar('yt_address', { length: 255 }).notNull(),
+  atAddress: varchar('at_address', { length: 255 }).notNull(),
   imageUrl: text('image_url').notNull(),
   topImageUrl: text('top_image_url').notNull(),
   language: languageEnum('language').default('silent').notNull(),
