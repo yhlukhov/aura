@@ -9,7 +9,7 @@ import {
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
-export const priceEnum = pgEnum('channel_price', ['free', 'membership'])
+export const priceEnum = pgEnum('channel_price', ['free', 'membership', 'donation'])
 export const languageEnum = pgEnum('channel_language', [
   'silent',
   'english',
@@ -24,7 +24,7 @@ export const channels = pgTable('channels', {
   url: varchar('url', { length: 255 }).notNull(),
   author: varchar('author', { length: 255 }).notNull(),
   description: text('description').notNull(),
-  price: priceEnum('price').default('free'),
+  price: priceEnum('price').array().default(['free']),
   atAddress: varchar('at_address', { length: 255 }).notNull(),
   imageUrl: text('image_url').notNull(),
   topImageUrl: text('top_image_url').notNull(),

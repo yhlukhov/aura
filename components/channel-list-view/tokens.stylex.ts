@@ -11,5 +11,6 @@ export const colors = stylex.defineVars({
   green: '#4ade80',
   greenDeep: '#15803d',
   ink: '#0b3d5c',
+  darkPink: '#81476e',
   white: '#ffffff',
 })

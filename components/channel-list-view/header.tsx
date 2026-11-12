@@ -9,7 +9,7 @@ const styles = stylex.create({
     alignItems: 'center',
     textAlign: 'center',
     gap: '12px',
-    paddingBlockEnd: '40px',
+    marginBottom: '40px'
   },
   title: {
     fontSize: 'clamp(40px, 7vw, 88px)',
@@ -17,18 +17,23 @@ const styles = stylex.create({
     fontWeight: 600,
     letterSpacing: '-0.025em',
     lineHeight: 1.05,
-    color: colors.skyDeep,
+    color: colors.darkPink,
+    textShadow: '0 2px 0 rgba(251, 191, 36, 0.75), 0 4px 12px rgba(255, 255, 255, 0.75)',
   },
   subtitle: {
-    fontSize: 'clamp(18px, 2.4vw, 26px)',
+    fontSize: 'clamp(19px, 2.4vw, 26px)',
     fontFamily: 'var(--font-spiritual-italic), serif',
     fontStyle: 'italic',
+    letterSpacing: {
+      default: '1px',
+      '@media (min-width: 800px)': '2px',
+    },
     fontWeight: 500,
     lineHeight: 1.15,
     color: colors.goldDeep,
   },
   tagline: {
-    fontSize: 'clamp(14px, 1.6vw, 18px)',
+    fontSize: 'clamp(13px, 1.6vw, 18px)',
     fontFamily: 'var(--font-spiritual-classic), serif',
     fontWeight: 500,
     letterSpacing: '0.045em',
@@ -44,7 +49,7 @@ export function Header() {
     <header {...stylex.props(styles.header)}>
       <h1 {...stylex.props(styles.title)}>Aura Space</h1>
       <h2 {...stylex.props(styles.subtitle)}>
-        A Practical Guide to Spiritual Awakening
+        Простір духовних практик та медитацій
       </h2>
       <h3 {...stylex.props(styles.tagline)}>
         A Journey of Self-Awareness and Spiritual Growth

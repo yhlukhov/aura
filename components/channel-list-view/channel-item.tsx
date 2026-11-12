@@ -75,7 +75,7 @@ export function ChannelItem({channel}: {channel: Channel}) {
       </div>
       <div {...stylex.props(styles.body)}>
         <h3 {...stylex.props(styles.name)}>{channel.name}</h3>
-        <h4 {...stylex.props(styles.author)}>{channel.author}</h4>
+        <h4 {...stylex.props(styles.author)}>{channel.atAddress}</h4>
         <div {...stylex.props(styles.description)}>{channel.description}</div>
       </div>
     </article>
