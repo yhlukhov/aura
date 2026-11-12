@@ -5,12 +5,16 @@ import { Header } from './header'
 import type { Channel } from '@/db/schema'
 import { ChannelList } from './channel-list'
 import { colors } from './tokens.stylex'
+import { Stars } from './stars'
 
 export function ChannelListView({ channels }: { channels: Channel[] }) {
   return (
     <div {...stylex.props(styles.root)}>
-      <Header />
-      <ChannelList channels={channels} />
+      <Stars />
+      <div {...stylex.props(styles.content)}>
+        <Header />
+        <ChannelList channels={channels} />
+      </div>
     </div>
   )
 }
@@ -18,6 +22,8 @@ export function ChannelListView({ channels }: { channels: Channel[] }) {
 //* Styles *//
 const styles = stylex.create({
   root: {
+    position: 'relative',
+    isolation: 'isolate',
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
@@ -38,5 +44,9 @@ const styles = stylex.create({
     paddingBlockEnd: '48px',
     paddingInline: 'clamp(16px, 4vw, 64px)',
     boxSizing: 'border-box',
+  },
+  content: {
+    position: 'relative',
+    zIndex: 1,
   },
 })
