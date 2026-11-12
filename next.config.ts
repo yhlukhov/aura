@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       new URL('https://yt3.googleusercontent.com/**'),
-      new URL('https://encrypted-tbn1.gstatic.com/**'),
+      new URL('https://encrypted-tbn**.gstatic.com/**'),
     ],
   },
   logging: {

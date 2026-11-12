@@ -4,6 +4,39 @@ import { Channel } from '@/db/schema'
 import { colors } from './tokens.stylex'
 import Link from 'next/link'
 
+export function ChannelItem({ channel }: { channel: Channel }) {
+  return (
+    <article {...stylex.props(styles.card, stylex.defaultMarker())}>
+      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackFar)} />
+      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackNear)} />
+      <Link
+        href={`/channel/${channel.id}`}
+        {...stylex.props(styles.imageWrapper)}
+      >
+        <Image
+          src={channel.imageUrl}
+          alt=''
+          fill
+          sizes='(max-width: 600px) 100vw, 400px'
+          {...stylex.props(styles.image)}
+        />
+      </Link>
+      <div {...stylex.props(styles.body)}>
+        <Link href={`/channel/${channel.id}`}>
+          <h3 {...stylex.props(styles.name)}>{channel.name}</h3>
+        </Link>
+        <Link href={channel.url} target='_blank'>
+          <h4 {...stylex.props(styles.author)}>{channel.atAddress}</h4>
+        </Link>
+        <Link href={`/channel/${channel.id}`}>
+          <div {...stylex.props(styles.description)}>{channel.description}</div>
+        </Link>
+      </div>
+    </article>
+  )
+}
+
+//* Styles *//
 const styles = stylex.create({
   card: {
     display: 'flex',
@@ -144,35 +177,3 @@ const styles = stylex.create({
     overflow: 'hidden',
   },
 })
-
-export function ChannelItem({ channel }: { channel: Channel }) {
-  return (
-    <article {...stylex.props(styles.card, stylex.defaultMarker())}>
-      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackFar)} />
-      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackNear)} />
-      <Link
-        href={`/channel/${channel.id}`}
-        {...stylex.props(styles.imageWrapper)}
-      >
-        <Image
-          src={channel.imageUrl}
-          alt=''
-          fill
-          sizes='(max-width: 600px) 100vw, 400px'
-          {...stylex.props(styles.image)}
-        />
-      </Link>
-      <div {...stylex.props(styles.body)}>
-        <Link href={`/channel/${channel.id}`}>
-          <h3 {...stylex.props(styles.name)}>{channel.name}</h3>
-        </Link>
-        <Link href={channel.url} target='_blank'>
-          <h4 {...stylex.props(styles.author)}>{channel.atAddress}</h4>
-        </Link>
-        <Link href={`/channel/${channel.id}`}>
-          <div {...stylex.props(styles.description)}>{channel.description}</div>
-        </Link>
-      </div>
-    </article>
-  )
-}

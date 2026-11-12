@@ -1,6 +1,21 @@
 import stylex from '@stylexjs/stylex'
 import { colors } from './tokens.stylex'
 
+export function Header() {
+  return (
+    <header {...stylex.props(styles.header)}>
+      <h1 {...stylex.props(styles.title)}>Aura Space</h1>
+      <h2 {...stylex.props(styles.subtitle)}>
+        Простір духовних практик та медитацій
+      </h2>
+      <h3 {...stylex.props(styles.tagline)}>
+        A Journey of Self-Awareness and Spiritual Growth
+      </h3>
+    </header>
+  )
+}
+
+//* Styles *//
 const styles = stylex.create({
   header: {
     width: '100%',
@@ -9,7 +24,7 @@ const styles = stylex.create({
     alignItems: 'center',
     textAlign: 'center',
     gap: '12px',
-    marginBottom: '40px'
+    marginBottom: '40px',
   },
   title: {
     fontSize: 'clamp(40px, 7vw, 88px)',
@@ -18,7 +33,8 @@ const styles = stylex.create({
     letterSpacing: '-0.025em',
     lineHeight: 1.05,
     color: colors.darkPink,
-    textShadow: '0 2px 0 rgba(251, 191, 36, 0.75), 0 4px 12px rgba(255, 255, 255, 0.75)',
+    textShadow:
+      '0 2px 0 rgba(251, 191, 36, 0.75), 0 4px 12px rgba(255, 255, 255, 0.75)',
   },
   subtitle: {
     fontSize: 'clamp(19px, 2.4vw, 26px)',
@@ -43,17 +59,3 @@ const styles = stylex.create({
     textTransform: 'uppercase',
   },
 })
-
-export function Header() {
-  return (
-    <header {...stylex.props(styles.header)}>
-      <h1 {...stylex.props(styles.title)}>Aura Space</h1>
-      <h2 {...stylex.props(styles.subtitle)}>
-        Простір духовних практик та медитацій
-      </h2>
-      <h3 {...stylex.props(styles.tagline)}>
-        A Journey of Self-Awareness and Spiritual Growth
-      </h3>
-    </header>
-  )
-}

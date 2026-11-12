@@ -4,10 +4,6 @@ import { ChannelListView } from '@/components/channel-list-view/channel-list-vie
 
 export const instant = false
 
-const styles = stylex.create({
-  main: {},
-})
-
 export default async function Home() {
   'use cache'
   const channels = await getChannels()
@@ -18,3 +14,8 @@ export default async function Home() {
     </main>
   )
 }
+
+//* Styles *//
+const styles = stylex.create({
+  main: {},
+})

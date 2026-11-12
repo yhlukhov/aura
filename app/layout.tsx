@@ -1,22 +1,10 @@
 import type { Metadata } from "next";
 import {
   Cormorant_Garamond,
-  Geist,
-  Geist_Mono,
   Lora,
   Playfair_Display,
 } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const spiritualDisplay = Cormorant_Garamond({
   variable: "--font-spiritual-display",
@@ -50,7 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${spiritualDisplay.variable} ${spiritualItalic.variable} ${spiritualClassic.variable}`}
+      className={`${spiritualDisplay.variable} ${spiritualItalic.variable} ${spiritualClassic.variable}`}
     >
       <body>{children}</body>
     </html>

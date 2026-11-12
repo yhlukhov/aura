@@ -2,6 +2,24 @@ import stylex from '@stylexjs/stylex'
 import { Channel } from '@/db/schema'
 import { ChannelItem } from './channel-item'
 
+interface Props {
+  channels: Channel[]
+}
+
+export function ChannelList({ channels }: Props) {
+  return (
+    <section {...stylex.props(styles.section)}>
+      <div {...stylex.props(styles.flex)}>
+        <div aria-hidden="true" {...stylex.props(styles.backdrop)} />
+        {channels.map((channel) => (
+          <ChannelItem key={channel.id} channel={channel} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+//* Styles *//
 const styles = stylex.create({
   backdrop: {
     position: 'fixed',
@@ -35,20 +53,3 @@ const styles = stylex.create({
     width: 'min(100%, 1400px)',
   },
 })
-
-interface Props {
-  channels: Channel[]
-}
-
-export function ChannelList({ channels }: Props) {
-  return (
-    <section {...stylex.props(styles.section)}>
-      <div {...stylex.props(styles.flex)}>
-        <div aria-hidden="true" {...stylex.props(styles.backdrop)} />
-        {channels.map((channel) => (
-          <ChannelItem key={channel.id} channel={channel} />
-        ))}
-      </div>
-    </section>
-  )
-}
