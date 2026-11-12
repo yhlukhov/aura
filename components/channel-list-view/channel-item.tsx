@@ -14,14 +14,32 @@ const styles = stylex.create({
     borderRadius: '24px',
     backgroundColor: colors.white,
     border: `3px solid ${colors.gold}`,
-    boxShadow: `0 10px 24px -8px ${colors.skyDeep}`,
-    transitionProperty: 'transform, box-shadow',
-    transitionDuration: '200ms',
-    transitionTimingFunction: 'ease-out',
-    ':hover': {
-      transform: 'translateY(-6px)',
-      boxShadow: `0 18px 32px -10px ${colors.greenDeep}`,
+    position: 'relative',
+    zIndex: {
+      default: 0,
+      '@media (hover: hover) and (pointer: fine)': {
+        ':hover': 2,
+      },
     },
+    transform: {
+      default: 'scale(1)',
+      '@media (hover: hover) and (pointer: fine)': {
+        ':hover': 'scale(1.05)',
+      },
+      '@media (prefers-reduced-motion: reduce)': 'none',
+    },
+    boxShadow: {
+      default: `0 10px 24px -8px ${colors.goldDeep}`,
+      '@media (hover: hover) and (pointer: fine)': {
+        ':hover': '0 20px 48px -16px rgba(73, 52, 95, 0.45), 0 0 28px rgba(251, 191, 36, 0.3)',
+      },
+    },
+    transitionProperty: 'transform, box-shadow',
+    transitionDuration: {
+      default: '400ms',
+      '@media (prefers-reduced-motion: reduce)': '0ms',
+    },
+    transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
   },
   imageWrapper: {
     position: 'relative',
@@ -63,7 +81,7 @@ const styles = stylex.create({
 
 export function ChannelItem({channel}: {channel: Channel}) {
   return (
-    <article {...stylex.props(styles.card)}>
+    <article {...stylex.props(styles.card, stylex.defaultMarker())}>
       <div {...stylex.props(styles.imageWrapper)}>
         <Image
           src={channel.imageUrl}
