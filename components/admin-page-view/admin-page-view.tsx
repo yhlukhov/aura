@@ -20,7 +20,7 @@ export function AdminPageView() {
     if (error) {
       setError(error)
     } else {
-      router.push('/auth/sign-in')
+      router.refresh()
     }
   }
 
