@@ -14,7 +14,6 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@animateicons/react": "^0.13.0",
     "@neon/auth": "^0.8.2",
     "@neondatabase/neon-js": "^0.9.0-beta",
     "@neondatabase/serverless": "^1.2.0",

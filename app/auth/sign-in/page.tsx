@@ -1,63 +1,32 @@
 'use client'
 
-import { useActionState } from 'react'
-import { signInWithEmail } from './actions'
+import { useState } from 'react'
+import { authClient } from '@/lib/auth/client'
+
+type LoginError = {
+  code?: string | undefined
+  message?: string | undefined
+  status: number
+  statusText: string
+} | null
 
 export default function SignInForm() {
-  const [state, formAction, isPending] = useActionState(signInWithEmail, null)
+  const [error, setError] = useState<LoginError>(null)
+
+  async function signInWithGoogle() {
+    const { error } = await authClient.signIn.social({
+      provider: 'google',
+      callbackURL: '/admin',
+    })
+    if (error) {
+      setError(error)
+    }
+  }
 
   return (
-    <form
-      action={formAction}
-    >
-      <div>
-        <h1>
-          Sign in to your account
-        </h1>
-      </div>
-
-      <div>
-        <label
-          htmlFor='email'
-        >
-          Email address
-        </label>
-        <input
-          id='email'
-          name='email'
-          type='email'
-          required
-          placeholder='john@my-company.com'
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor='password'
-        >
-          Password
-        </label>
-        <input
-          id='password'
-          name='password'
-          type='password'
-          required
-          placeholder='*****'
-        />
-      </div>
-
-      {state?.error && (
-        <div>
-          {state.error}
-        </div>
-      )}
-
-      <button
-        type='submit'
-        disabled={isPending}
-      >
-        Sign in
-      </button>
-    </form>
+    <section>
+      <button onClick={signInWithGoogle}>Sign In with Google</button>
+      {error && <div>{error.message ?? 'Failed to sign in. Try again'}</div>}
+    </section>
   )
 }
