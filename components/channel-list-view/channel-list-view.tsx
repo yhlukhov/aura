@@ -6,8 +6,11 @@ import type { Channel } from '@/db/schema'
 import { ChannelList } from './channel-list'
 import { colors } from './tokens.stylex'
 import { Stars } from './stars'
+import { useEffect } from 'react'
+import { authClient } from '@/lib/auth/client'
 
 export function ChannelListView({ channels }: { channels: Channel[] }) {
+
   return (
     <div {...stylex.props(styles.root)}>
       <Stars />
