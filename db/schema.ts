@@ -16,6 +16,12 @@ export const languageEnum = pgEnum('channel_language', [
   'russian',
   'ukrainian',
 ])
+export const countryEnum = pgEnum('channel_country', [
+  'United Kingdom',
+  'United States',
+  'Ukraine',
+  'Russia'
+])
 
 // Таблиця каналів
 export const channels = pgTable('channels', {
@@ -28,6 +34,7 @@ export const channels = pgTable('channels', {
   atAddress: varchar('at_address', { length: 255 }).notNull(),
   imageUrl: text('image_url').notNull(),
   topImageUrl: text('top_image_url').notNull(),
+  country: countryEnum('country').notNull(),
   language: languageEnum('language').default('silent').notNull(),
   createdAt: timestamp('created_at').notNull(),
 })

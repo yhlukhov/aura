@@ -10,7 +10,13 @@ interface Props {
 
 export default async function ChannelPage({ params }: Props) {
   const { id } = await params
-  const channel = await getChannel(Number.parseInt(id))
+  const channelId = Number(id)
+
+  if (!Number.isSafeInteger(channelId) || channelId < 1) {
+    return <ChannelView channel={undefined} emptyMessage="Invalid channel ID." />
+  }
+
+  const channel = await getChannel(channelId)
 
   return <ChannelView channel={channel} />
 }
