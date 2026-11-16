@@ -31,5 +31,22 @@
     color: inherit;
     text-decoration: none;
   }
-}
 
+  input[data-create-channel-input],
+  select[data-create-channel-input],
+  textarea[data-create-channel-input] {
+    border: 1px solid rgba(129, 71, 110, 0.24) !important;
+  }
+
+  fieldset[data-create-channel-pricing] {
+    border: 1px solid rgba(129, 71, 110, 0.24) !important;
+  }
+
+  a[data-channel-link-item] {
+    border: 1px solid rgba(2, 132, 199, 0.24) !important;
+  }
+
+  button[data-channel-description-toggle] {
+    border: none !important;
+  }
+}

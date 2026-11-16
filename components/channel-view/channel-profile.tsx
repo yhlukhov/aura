@@ -1,0 +1,381 @@
+'use client'
+
+import Image from 'next/image'
+import Link from 'next/link'
+import * as stylex from '@stylexjs/stylex'
+import { useEffect, useRef, useState } from 'react'
+import type { Channel, Link as ChannelLink, Video } from '@/db/schema'
+import { colors } from '@/components/channel-list-view/tokens.stylex'
+
+type ChannelProfileData = Pick<
+  Channel,
+  | 'id'
+  | 'name'
+  | 'url'
+  | 'atAddress'
+  | 'country'
+  | 'description'
+  | 'imageUrl'
+  | 'topImageUrl'
+> & { links: ChannelLink[] }
+
+export function ChannelProfile({
+  channel,
+  videoCount,
+  editHref,
+}: {
+  channel: ChannelProfileData
+  videoCount: number
+  editHref?: string
+}) {
+  const descriptionRef = useRef<HTMLParagraphElement>(null)
+  const [isExpandable, setIsExpandable] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  useEffect(() => {
+    const description = descriptionRef.current
+    if (description) {
+      setIsExpandable(description.scrollHeight > 300)
+    }
+  }, [channel.description])
+
+  return (
+    <header {...stylex.props(styles.profile)}>
+      <div {...stylex.props(styles.cover)}>
+        <Image
+          src={channel.topImageUrl}
+          alt={`${channel.name} cover`}
+          fill
+          priority
+          sizes='(max-width: 700px) 100vw, 1400px'
+          unoptimized
+          {...stylex.props(styles.coverImage)}
+        />
+      </div>
+
+      <div {...stylex.props(styles.identity)}>
+        <div {...stylex.props(styles.avatar)}>
+          <Image
+            src={channel.imageUrl}
+            alt={`${channel.name} profile`}
+            fill
+            sizes='(max-width: 700px) 104px, 164px'
+            unoptimized
+            {...stylex.props(styles.avatarImage)}
+          />
+        </div>
+
+        <div {...stylex.props(styles.details)}>
+          <div {...stylex.props(styles.nameRow)}>
+            <Link href={channel.url} target='_blank' rel='noopener noreferrer'>
+              <h1 {...stylex.props(styles.name)}>{channel.name}</h1>
+            </Link>
+            {editHref && (
+              <Link href={editHref} {...stylex.props(styles.editButton)}>
+                Edit
+              </Link>
+            )}
+          </div>
+          <Link
+            href={channel.url}
+            target='_blank'
+            rel='noopener noreferrer'
+            {...stylex.props(styles.address)}
+          >
+            {channel.atAddress}
+            <span {...stylex.props(styles.meta)}> · {channel.country}</span>
+            <span {...stylex.props(styles.meta)}>
+              {' '}
+              · {videoCount} {videoCount === 1 ? 'video' : 'videos'}
+            </span>
+          </Link>
+
+          <div {...stylex.props(styles.descriptionArea)}>
+            <p
+              ref={descriptionRef}
+              id={`channel-description-${channel.id}`}
+              {...stylex.props(
+                styles.description,
+                !isExpanded && styles.descriptionCollapsed,
+              )}
+            >
+              {channel.description}
+            </p>
+            {isExpandable && !isExpanded && (
+              <span
+                aria-hidden='true'
+                {...stylex.props(styles.descriptionFade)}
+              />
+            )}
+          </div>
+          {isExpandable && (
+            <button
+              type='button'
+              aria-expanded={isExpanded}
+              aria-controls={`channel-description-${channel.id}`}
+              onClick={() => setIsExpanded((expanded) => !expanded)}
+              data-channel-description-toggle
+              {...stylex.props(styles.expandButton)}
+            >
+              {isExpanded ? 'Show less' : '… Show more'}
+            </button>
+          )}
+
+          <nav
+            aria-label={`${channel.name} links`}
+            {...stylex.props(styles.links)}
+          >
+            {channel.links.length > 0 ? (
+              channel.links.map((link) => (
+                <ChannelLinkItem key={link.id} link={link} />
+              ))
+            ) : (
+              <p {...stylex.props(styles.noLinks)}>No links added yet.</p>
+            )}
+          </nav>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+function ChannelLinkItem({ link }: { link: ChannelLink }) {
+  return (
+    <Link
+      href={link.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-channel-link-item
+      {...stylex.props(styles.link)}
+    >
+      <span {...stylex.props(styles.linkIcon)}>
+        <Image src={link.imageUrl} alt="" width={20} height={20} unoptimized />
+      </span>
+      <span>{link.name}</span>
+      <span aria-hidden="true" {...stylex.props(styles.externalIcon)}>
+        ↗
+      </span>
+    </Link>
+  )
+}
+
+const styles = stylex.create({
+  profile: {
+    display: 'block',
+    paddingBlockStart: '12px',
+  },
+  cover: {
+    position: 'relative',
+    width: '100%',
+    height: 'clamp(112px, 19vw, 230px)',
+    overflow: 'hidden',
+    borderRadius: '0 0 24px 24px',
+    backgroundColor: colors.greenLight,
+    boxShadow: '0 12px 40px rgba(11, 61, 92, 0.14)',
+  },
+  coverImage: {
+    objectFit: 'cover',
+    objectPosition: 'center 44%',
+  },
+  identity: {
+    display: 'grid',
+    gridTemplateColumns: '164px minmax(0, 1fr)',
+    alignItems: 'start',
+    columnGap: '28px',
+    paddingBlock: '28px 30px',
+    '@media (max-width: 700px)': {
+      gridTemplateColumns: '104px minmax(0, 1fr)',
+      columnGap: '18px',
+      paddingBlock: '22px 24px',
+    },
+    '@media (max-width: 460px)': {
+      gridTemplateColumns: '1fr',
+      justifyItems: 'center',
+      rowGap: '16px',
+    },
+  },
+  avatar: {
+    position: 'relative',
+    width: '164px',
+    height: '164px',
+    overflow: 'hidden',
+    borderRadius: '50%',
+    border: '3px solid #fbbf24',
+    backgroundColor: colors.greenLight,
+    boxShadow: '0 8px 28px rgba(11, 61, 92, 0.16)',
+    '@media (max-width: 700px)': {
+      width: '104px',
+      height: '104px',
+    },
+  },
+  avatarImage: {
+    objectFit: 'cover',
+  },
+  details: {
+    minWidth: 0,
+    paddingBlockStart: '2px',
+    '@media (max-width: 460px)': {
+      width: '100%',
+    },
+  },
+  nameRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '16px',
+  },
+  name: {
+    margin: 0,
+    color: colors.darkPink,
+    fontSize: 'clamp(28px, 4vw, 42px)',
+    fontWeight: 700,
+    lineHeight: 1.12,
+    letterSpacing: '-0.035em',
+    overflowWrap: 'anywhere',
+  },
+  editButton: {
+    display: 'inline-flex',
+    flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '38px',
+    paddingBlock: '8px',
+    paddingInline: '18px',
+    border: '1px solid',
+    borderColor: colors.darkPink,
+    borderRadius: '999px',
+    backgroundColor: colors.darkPink,
+    color: colors.white,
+    fontSize: '14px',
+    fontWeight: 600,
+    transitionProperty: 'background-color, color',
+    transitionDuration: '160ms',
+    ':hover': {
+      backgroundColor: colors.white,
+      color: colors.darkPink,
+    },
+    ':focus-visible': {
+      outline: '3px solid',
+      outlineColor: colors.gold,
+      outlineOffset: '3px',
+    },
+  },
+  address: {
+    display: 'inline-block',
+    marginBlockStart: '7px',
+    color: colors.skyDeep,
+    fontSize: '14px',
+    fontWeight: 600,
+    lineHeight: 1.5,
+    overflowWrap: 'anywhere',
+    transitionProperty: 'color',
+    transitionDuration: '160ms',
+    ':hover': {
+      color: colors.warmBronze,
+    },
+    ':focus-visible': {
+      outline: '2px solid #fbbf24',
+      outlineOffset: '3px',
+      borderRadius: '2px',
+    },
+  },
+  meta: {
+    color: colors.mutedPlum,
+    fontWeight: 400,
+  },
+  descriptionArea: {
+    position: 'relative',
+    marginBlockStart: '13px',
+  },
+  description: {
+    margin: 0,
+    color: colors.mutedPlum,
+    fontSize: '15px',
+    lineHeight: 1.7,
+    whiteSpace: 'pre-wrap',
+    overflowWrap: 'anywhere',
+  },
+  descriptionCollapsed: {
+    maxHeight: '300px',
+    overflow: 'hidden',
+  },
+  descriptionFade: {
+    position: 'absolute',
+    insetInline: 0,
+    bottom: 0,
+    height: '42px',
+    backgroundImage: 'linear-gradient(transparent, #f8fcff)',
+    pointerEvents: 'none',
+  },
+  expandButton: {
+    display: 'block',
+    marginBlockStart: '4px',
+    padding: '2px 0',
+    border: 'none',
+    backgroundColor: 'transparent',
+    color: colors.goldDeep,
+    fontFamily: 'inherit',
+    fontSize: '14px',
+    fontWeight: 700,
+    cursor: 'pointer',
+    ':hover': {
+      color: colors.warmBronze,
+    },
+    ':focus-visible': {
+      outline: '2px solid #fbbf24',
+      outlineOffset: '3px',
+      borderRadius: '2px',
+    },
+  },
+  links: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: '9px',
+    marginBlockStart: '17px',
+  },
+  link: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '8px',
+    minHeight: '38px',
+    maxWidth: '100%',
+    padding: '7px 12px 7px 8px',
+    borderRadius: '999px',
+    backgroundColor: 'rgba(224, 247, 255, 0.72)',
+    color: colors.ink,
+    fontSize: '13px',
+    lineHeight: 1.3,
+    overflowWrap: 'anywhere',
+    transitionProperty: 'background-color, border-color, color',
+    transitionDuration: '160ms',
+    ':hover': {
+      backgroundColor: colors.goldLight,
+      color: colors.darkPink,
+    },
+    ':focus-visible': {
+      outline: '2px solid #d97706',
+      outlineOffset: '2px',
+    },
+  },
+  linkIcon: {
+    display: 'grid',
+    width: '20px',
+    height: '20px',
+    flexShrink: 0,
+    placeItems: 'center',
+    overflow: 'hidden',
+    borderRadius: '50%',
+    backgroundColor: 'rgba(224, 247, 255, 0.9)',
+  },
+  externalIcon: {
+    flexShrink: 0,
+    color: colors.goldDeep,
+    fontSize: '13px',
+  },
+  noLinks: {
+    margin: 0,
+    color: colors.mutedPlum,
+    fontSize: '13px',
+  },
+})

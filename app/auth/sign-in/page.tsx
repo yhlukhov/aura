@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import stylex from '@stylexjs/stylex'
 import { authClient } from '@/lib/auth/client'
 import { FcGoogle } from 'react-icons/fc'
-import stylex from '@stylexjs/stylex'
 import { Header } from '@/components/channel-list-view/header'
 import { Stars } from '@/components/channel-list-view/stars'
 import { colors } from '@/components/channel-list-view/tokens.stylex'
@@ -19,7 +19,7 @@ export default function SignInForm() {
   const [error, setError] = useState<LoginError>(null)
 
   async function signInWithGoogle() {
-    const { error } = await authClient.signIn.social({
+    const { data, error } = await authClient.signIn.social({
       provider: 'google',
       callbackURL: '/admin',
     })
