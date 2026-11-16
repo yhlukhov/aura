@@ -7,20 +7,25 @@ import Link from 'next/link'
 export function ChannelItem({ channel }: { channel: Channel }) {
   return (
     <article {...stylex.props(styles.card, stylex.defaultMarker())}>
-      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackFar)} />
-      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackNear)} />
-      <Link
-        href={`/channel/${channel.id}`}
-        {...stylex.props(styles.imageWrapper)}
-      >
-        <Image
-          src={channel.imageUrl}
-          alt=''
-          fill
-          sizes='(max-width: 600px) 100vw, 400px'
-          {...stylex.props(styles.image)}
-        />
-      </Link>
+      <div
+        aria-hidden='true'
+        {...stylex.props(styles.stackLayer, styles.stackFar)}
+      />
+      <div
+        aria-hidden='true'
+        {...stylex.props(styles.stackLayer, styles.stackNear)}
+      />
+      <div {...stylex.props(styles.imageWrapper)}>
+        <Link href={`/channel/${channel.id}`}>
+          <Image
+            src={channel.imageUrl}
+            alt=''
+            width={185}
+            height={185}
+            {...stylex.props(styles.image)}
+          />
+        </Link>
+      </div>
       <div {...stylex.props(styles.body)}>
         <Link href={`/channel/${channel.id}`}>
           <h3 {...stylex.props(styles.name)}>{channel.name}</h3>
@@ -112,15 +117,32 @@ const styles = stylex.create({
   },
   imageWrapper: {
     position: 'relative',
-    overflow: 'hidden',
+    overflow: 'visible',
     borderRadius: '23px 23px 0 0',
     width: '100%',
     height: '180px',
     flexShrink: 0,
-    backgroundImage: `linear-gradient(135deg, ${colors.sky}, ${colors.green})`,
+    zIndex: 1,
+    backgroundImage: "url('/channel-bg.jpg')",
   },
   image: {
-    objectFit: 'cover',
+    objectFit: 'contain',
+    transform: {
+      default: 'translateY(8px) scale(1)',
+      '@media (hover: hover) and (pointer: fine)': {
+        ':hover': 'translateY(10px) scale(1.05)',
+      },
+    },
+    transitionProperty: 'transform',
+    transitionDuration: {
+      default: '250ms',
+      '@media (prefers-reduced-motion: reduce)': '0ms',
+    },
+    transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    marginLeft: '125px',
+    borderRadius: '20px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+    outline: '1px solid rgba(233, 182, 55, 0.65)',
   },
   body: {
     display: 'flex',
