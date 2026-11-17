@@ -33,6 +33,7 @@
   }
 
   input[data-add-video-input],
+  input[data-add-link-input],
   input[data-create-channel-input],
   select[data-create-channel-input],
   fieldset[data-create-channel-pricing],

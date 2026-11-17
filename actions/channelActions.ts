@@ -1,6 +1,13 @@
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { channels, NewChannel, videos, type NewVideo } from "@/db/schema";
+import {
+  channels,
+  NewChannel,
+  links,
+  videos,
+  type NewLink,
+  type NewVideo,
+} from "@/db/schema";
 
 export function getAllChannels() {
   return db.select().from(channels)
@@ -25,4 +32,8 @@ export function createChannel(channel: NewChannel) {
 
 export function addVideoToChannel(channelId: number, video: NewVideo) {
   return db.insert(videos).values({...video})
+}
+
+export function addLinkToChannel(channelId: number, link: NewLink) {
+  return db.insert(links).values({ ...link, channelId })
 }

@@ -58,8 +58,15 @@ const styles = stylex.create({
     minHeight: '100vh',
     width: '100%',
     backgroundColor: colors.skyLight,
-    backgroundImage:
-      'linear-gradient(180deg, rgba(224, 247, 255, 0.55), rgba(255, 247, 204, 0.45))',
+    backgroundImage: "url('/channel-view-bg.jpg')",
+    backgroundSize: 'cover',
+    backgroundPosition: 'center 62%',
+    backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed',
+    '@media (max-width: 700px)': {
+      backgroundPosition: 'center center',
+      backgroundAttachment: 'scroll',
+    },
     color: colors.ink,
     fontFamily: 'Arial, Helvetica, sans-serif',
   },
