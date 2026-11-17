@@ -1,9 +1,13 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { createChannel } from '@/actions/channelActions'
-import { countryEnum, type NewChannel } from '@/db/schema'
-import { auth } from '@/lib/auth/server'
+import { revalidatePath } from 'next/cache'
+import {
+  addVideoToChannel,
+  createChannel,
+  getChannel,
+} from '@/actions/channelActions'
+import { countryEnum, type NewChannel, type NewVideo } from '@/db/schema'
 
 const prices = ['free', 'membership', 'donation'] as const
 const languages = ['silent', 'english', 'russian', 'ukrainian'] as const
@@ -23,14 +27,11 @@ function isValidImageUrl(value: string) {
     : isValidWebUrl(value)
 }
 
+//* Create Channel Action *//
 export async function createChannelAction(
   _previousState: string | null,
   formData: FormData,
 ): Promise<string | null> {
-  const session = await auth.getSession()
-  if (session.data?.user.role !== 'admin') {
-    redirect('/')
-  }
 
   const getValue = (name: string) => {
     const value = formData.get(name)
@@ -136,4 +137,86 @@ export async function createChannelAction(
   }
 
   redirect(`/admin/channel/${createdChannel.id}`)
+}
+
+//* Add Video Action *//
+export async function addVideoAction(
+  _previousState: string | null,
+  formData: FormData,
+): Promise<string | null> {
+
+  const getValue = (name: string) => {
+    const value = formData.get(name)
+    return typeof value === 'string' ? value.trim() : ''
+  }
+
+  const channelIdValue = getValue('channelId')
+  const channelId = Number(channelIdValue)
+  if (
+    !/^[1-9]\d*$/.test(channelIdValue) ||
+    !Number.isSafeInteger(channelId)
+  ) {
+    return 'This channel could not be found.'
+  }
+
+  const channel = await getChannel(channelId)
+  if (!channel) {
+    return 'This channel could not be found.'
+  }
+
+  const url = getValue('url')
+  const title = getValue('title')
+  const durationValue = getValue('duration')
+  const duration = Number(durationValue)
+  const createdAtValue = getValue('createdAt')
+
+  if (!url || !title || !durationValue || !createdAtValue) {
+    return 'Please complete all required fields.'
+  }
+
+  if (url.length > 255 || !isValidWebUrl(url)) {
+    return 'Enter a valid video URL starting with http:// or https:// (255 characters or fewer).'
+  }
+
+  if (
+    !/^\d+$/.test(durationValue) ||
+    !Number.isSafeInteger(duration) ||
+    duration < 1 ||
+    duration > 2147483647
+  ) {
+    return 'Enter the video duration as a whole number of seconds greater than zero.'
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(createdAtValue)) {
+    return 'Choose a valid video creation date.'
+  }
+
+  const [year, month, day] = createdAtValue.split('-').map(Number)
+  const selectedDate = new Date(Date.UTC(year, month - 1, day, 12))
+  if (
+    selectedDate.getUTCFullYear() !== year ||
+    selectedDate.getUTCMonth() !== month - 1 ||
+    selectedDate.getUTCDate() !== day
+  ) {
+    return 'Choose a valid video creation date.'
+  }
+
+  const video: NewVideo = {
+    channelId,
+    url,
+    title,
+    duration,
+    createdAt: selectedDate,
+  }
+
+  try {
+    await addVideoToChannel(channelId, video)
+  } catch (error) {
+    console.error('Failed to add video to channel', error)
+    return 'We could not add the video. Please try again.'
+  }
+
+  revalidatePath(`/admin/channel/${channelId}`)
+  revalidatePath(`/channel/${channelId}`)
+  redirect(`/admin/channel/${channelId}`)
 }

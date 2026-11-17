@@ -139,7 +139,7 @@ const styles = stylex.create({
       '@media (prefers-reduced-motion: reduce)': '0ms',
     },
     transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-    marginLeft: '125px',
+    marginLeft: '90px',
     borderRadius: '20px',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
     outline: '1px solid rgba(233, 182, 55, 0.65)',

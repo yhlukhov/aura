@@ -32,13 +32,11 @@
     text-decoration: none;
   }
 
+  input[data-add-video-input],
   input[data-create-channel-input],
   select[data-create-channel-input],
+  fieldset[data-create-channel-pricing],
   textarea[data-create-channel-input] {
-    border: 1px solid rgba(129, 71, 110, 0.24) !important;
-  }
-
-  fieldset[data-create-channel-pricing] {
     border: 1px solid rgba(129, 71, 110, 0.24) !important;
   }
 
