@@ -20,7 +20,11 @@ export function CreateChannelForm() {
   return (
     <main {...stylex.props(styles.page)}>
       <header {...stylex.props(styles.header)}>
-        <p {...stylex.props(styles.eyebrow)}>AURA · ADMIN</p>
+        <p {...stylex.props(styles.eyebrow)}>
+          <Link href='/'>AURA</Link>
+          {' · '}
+          <Link href='/admin'>ADMIN</Link>
+        </p>
         <h1 {...stylex.props(styles.title)}>Create a channel</h1>
         <p {...stylex.props(styles.intro)}>
           Add a new space for inspiration and spiritual growth.

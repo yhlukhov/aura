@@ -21,6 +21,7 @@ export default async function ExistingChannel({ params }: Props) {
     <ChannelView
       channel={channel}
       editHref={`/admin/channel/${channelId}/edit`}
+      showAddVideo
     />
   )
 }

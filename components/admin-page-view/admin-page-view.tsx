@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import stylex from '@stylexjs/stylex'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { authClient } from '@/lib/auth/client'
 import { colors } from '@/components/channel-list-view/tokens.stylex'
 import { Channel } from '@/db/schema'
@@ -31,7 +32,10 @@ export function AdminPageView({channels}: {channels: Channel[]}) {
   return (
     <main {...stylex.props(styles.main)}>
       <header {...stylex.props(styles.header)}>
-        <p {...stylex.props(styles.eyebrow)}>AURA · ADMIN</p>
+        <p {...stylex.props(styles.eyebrow)}>
+          <Link href='/'>AURA</Link>
+          {' · ADMIN'}
+        </p>
         <h1 {...stylex.props(styles.title)}>Admin Page</h1>
         <p {...stylex.props(styles.intro)}>
           Manage your channels and keep your community connected.
