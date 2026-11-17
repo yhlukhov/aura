@@ -129,12 +129,22 @@ export function ChannelProfile({
             aria-label={`${channel.name} links`}
             {...stylex.props(styles.links)}
           >
-            {channel.links.length > 0 ? (
-              channel.links.map((link) => (
-                <ChannelLinkItem key={link.id} link={link} />
-              ))
-            ) : (
-              <p {...stylex.props(styles.noLinks)}>No links added yet.</p>
+            <div {...stylex.props(styles.linkItems)}>
+              {channel.links.length > 0 ? (
+                channel.links.map((link) => (
+                  <ChannelLinkItem key={link.id} link={link} />
+                ))
+              ) : (
+                <p {...stylex.props(styles.noLinks)}>No links added yet.</p>
+              )}
+            </div>
+            {editHref && (
+              <Link
+                href={`/admin/channel/${channel.id}/add-link`}
+                {...stylex.props(channelActionButton.root)}
+              >
+                Add link
+              </Link>
             )}
           </nav>
         </div>
@@ -152,9 +162,15 @@ function ChannelLinkItem({ link }: { link: ChannelLink }) {
       data-channel-link-item
       {...stylex.props(styles.link)}
     >
-      <span {...stylex.props(styles.linkIcon)}>
-        <Image src={link.imageUrl} alt="" width={20} height={20} unoptimized />
-      </span>
+      <div {...stylex.props(styles.linkIcon)}>
+        <Image
+          src={link.imageUrl}
+          alt=""
+          width={20}
+          height={20}
+          unoptimized
+        />
+      </div>
       <span>{link.name}</span>
       <span aria-hidden="true" {...stylex.props(styles.externalIcon)}>
         ↗
@@ -172,7 +188,7 @@ const styles = stylex.create({
     width: '100%',
     height: 'clamp(112px, 19vw, 230px)',
     overflow: 'hidden',
-    borderRadius: '0 0 24px 24px',
+    borderRadius: '24px',
     backgroundColor: colors.greenLight,
     boxShadow: '0 12px 40px rgba(11, 61, 92, 0.14)',
   },
@@ -305,10 +321,18 @@ const styles = stylex.create({
   },
   links: {
     display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: '9px',
+    gap: '12px',
     marginBlockStart: '17px',
+  },
+  linkItems: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '9px',
+    minWidth: 0,
   },
   link: {
     display: 'inline-flex',
@@ -342,6 +366,7 @@ const styles = stylex.create({
     placeItems: 'center',
     overflow: 'hidden',
     borderRadius: '50%',
+    outline: '1px solid rgba(175, 124, 73, 0.35)',
     backgroundColor: 'rgba(224, 247, 255, 0.9)',
   },
   externalIcon: {

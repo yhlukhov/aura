@@ -3,11 +3,18 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import {
+  addLinkToChannel,
   addVideoToChannel,
   createChannel,
   getChannel,
 } from '@/actions/channelActions'
-import { countryEnum, type NewChannel, type NewVideo } from '@/db/schema'
+import {
+  countryEnum,
+  type NewChannel,
+  type NewLink,
+  type NewVideo,
+} from '@/db/schema'
+import { auth } from '@/lib/auth/server'
 
 const prices = ['free', 'membership', 'donation'] as const
 const languages = ['silent', 'english', 'russian', 'ukrainian'] as const
@@ -144,6 +151,10 @@ export async function addVideoAction(
   _previousState: string | null,
   formData: FormData,
 ): Promise<string | null> {
+  const session = await auth.getSession()
+  if (session.data?.user.role !== 'admin') {
+    redirect('/')
+  }
 
   const getValue = (name: string) => {
     const value = formData.get(name)
@@ -214,6 +225,70 @@ export async function addVideoAction(
   } catch (error) {
     console.error('Failed to add video to channel', error)
     return 'We could not add the video. Please try again.'
+  }
+
+  revalidatePath(`/admin/channel/${channelId}`)
+  revalidatePath(`/channel/${channelId}`)
+  redirect(`/admin/channel/${channelId}`)
+}
+
+//* Add Link Action *//
+export async function addLinkAction(
+  _previousState: string | null,
+  formData: FormData,
+): Promise<string | null> {
+  const session = await auth.getSession()
+  if (session.data?.user.role !== 'admin') {
+    redirect('/')
+  }
+
+  const getValue = (name: string) => {
+    const value = formData.get(name)
+    return typeof value === 'string' ? value.trim() : ''
+  }
+
+  const channelIdValue = getValue('channelId')
+  const channelId = Number(channelIdValue)
+  if (!/^[1-9]\d*$/.test(channelIdValue) || !Number.isSafeInteger(channelId)) {
+    return 'This channel could not be found.'
+  }
+
+  const channel = await getChannel(channelId)
+  if (!channel) {
+    return 'This channel could not be found.'
+  }
+
+  const name = getValue('name')
+  const url = getValue('url')
+  const imageUrl = getValue('imageUrl')
+  if (!name || !url || !imageUrl) {
+    return 'Please complete all required fields.'
+  }
+
+  if (name.length > 255) {
+    return 'The link name must be 255 characters or fewer.'
+  }
+
+  if (url.length > 255 || !isValidWebUrl(url)) {
+    return 'Enter a valid link URL starting with http:// or https:// (255 characters or fewer).'
+  }
+
+  if (!isValidImageUrl(imageUrl)) {
+    return 'Enter a valid icon URL starting with http:// or https://, or a path within this site.'
+  }
+
+  const link: NewLink = {
+    channelId,
+    name,
+    url,
+    imageUrl,
+  }
+
+  try {
+    await addLinkToChannel(channelId, link)
+  } catch (error) {
+    console.error('Failed to add link to channel', error)
+    return 'We could not add the link. Please try again.'
   }
 
   revalidatePath(`/admin/channel/${channelId}`)
