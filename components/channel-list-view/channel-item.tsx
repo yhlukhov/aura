@@ -52,7 +52,7 @@ const styles = stylex.create({
     flex: '0 1 360px',
     minHeight: '350px',
     marginTop: '14px',
-    borderRadius: '24px',
+    borderRadius: '28px',
     backgroundColor: colors.white,
     borderWidth: '1px',
     borderStyle: 'solid',

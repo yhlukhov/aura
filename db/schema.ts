@@ -17,10 +17,11 @@ export const languageEnum = pgEnum('channel_language', [
   'ukrainian',
 ])
 export const countryEnum = pgEnum('channel_country', [
+  'Australia',
+  'Russia',
+  'Ukraine',
   'United Kingdom',
   'United States',
-  'Ukraine',
-  'Russia'
 ])
 
 // Таблиця каналів

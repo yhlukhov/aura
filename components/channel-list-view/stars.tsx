@@ -25,7 +25,7 @@ const starDrift = stylex.keyframes({
 
 const styles = stylex.create({
   layer: {
-    position: 'absolute',
+    position: 'fixed',
     zIndex: 0,
     top: 0,
     insetInline: 0,

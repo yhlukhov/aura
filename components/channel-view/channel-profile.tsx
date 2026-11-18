@@ -4,9 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import * as stylex from '@stylexjs/stylex'
 import { useEffect, useRef, useState } from 'react'
-import type { Channel, Link as ChannelLink, Video } from '@/db/schema'
+import type { Channel, Link as ChannelLink } from '@/db/schema'
 import { colors } from '@/components/channel-list-view/tokens.stylex'
 import { channelActionButton } from './channel-action-button.stylex'
+import { ChannelLinkItem } from './channel-link-item'
 
 type ChannelProfileData = Pick<
   Channel,
@@ -42,29 +43,38 @@ export function ChannelProfile({
 
   return (
     <header {...stylex.props(styles.profile)}>
-      <div {...stylex.props(styles.cover)}>
-        <Image
-          src={channel.topImageUrl}
-          alt={`${channel.name} cover`}
-          fill
-          priority
-          sizes='(max-width: 700px) 100vw, 1400px'
-          unoptimized
-          {...stylex.props(styles.coverImage)}
-        />
-      </div>
-
-      <div {...stylex.props(styles.identity)}>
-        <div {...stylex.props(styles.avatar)}>
+      <Link href={channel.url} target='_blank' rel='noopener noreferrer'>
+        <div {...stylex.props(styles.cover)}>
           <Image
-            src={channel.imageUrl}
-            alt={`${channel.name} profile`}
+            src={channel.topImageUrl}
+            alt={`${channel.name} cover`}
             fill
-            sizes='(max-width: 700px) 104px, 164px'
+            priority
+            sizes='(max-width: 700px) 100vw, 1400px'
             unoptimized
-            {...stylex.props(styles.avatarImage)}
+            {...stylex.props(styles.coverImage)}
           />
         </div>
+      </Link>
+
+      <div {...stylex.props(styles.identity)}>
+        <Link
+          href={channel.url}
+          target='_blank'
+          rel='noopener noreferrer'
+          {...stylex.props(styles.avatarLink)}
+        >
+          <div {...stylex.props(styles.avatar)}>
+            <Image
+              src={channel.imageUrl}
+              alt={`${channel.name} profile`}
+              fill
+              sizes='(max-width: 700px) 104px, 164px'
+              unoptimized
+              {...stylex.props(styles.avatarImage)}
+            />
+          </div>
+        </Link>
 
         <div {...stylex.props(styles.details)}>
           <div {...stylex.props(styles.nameRow)}>
@@ -72,10 +82,7 @@ export function ChannelProfile({
               <h1 {...stylex.props(styles.name)}>{channel.name}</h1>
             </Link>
             {editHref && (
-              <Link
-                href={editHref}
-                {...stylex.props(channelActionButton.root)}
-              >
+              <Link href={editHref} {...stylex.props(channelActionButton.root)}>
                 Edit
               </Link>
             )}
@@ -153,32 +160,6 @@ export function ChannelProfile({
   )
 }
 
-function ChannelLinkItem({ link }: { link: ChannelLink }) {
-  return (
-    <Link
-      href={link.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      data-channel-link-item
-      {...stylex.props(styles.link)}
-    >
-      <div {...stylex.props(styles.linkIcon)}>
-        <Image
-          src={link.imageUrl}
-          alt=""
-          width={20}
-          height={20}
-          unoptimized
-        />
-      </div>
-      <span>{link.name}</span>
-      <span aria-hidden="true" {...stylex.props(styles.externalIcon)}>
-        ↗
-      </span>
-    </Link>
-  )
-}
-
 const styles = stylex.create({
   profile: {
     display: 'block',
@@ -195,6 +176,18 @@ const styles = stylex.create({
   coverImage: {
     objectFit: 'cover',
     objectPosition: 'center 44%',
+    transitionProperty: 'transform',
+    transitionDuration: '300ms',
+    transitionTimingFunction: 'ease-out',
+    '@media (hover: hover) and (pointer: fine)': {
+      ':hover': {
+        transform: 'translateY(-3px) scale(1.05)',
+      },
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      transitionDuration: '0ms',
+      transform: 'none',
+    },
   },
   identity: {
     display: 'grid',
@@ -227,8 +220,24 @@ const styles = stylex.create({
       height: '104px',
     },
   },
+  avatarLink: {
+    display: 'block',
+    borderRadius: '50%',
+  },
   avatarImage: {
     objectFit: 'cover',
+    transitionProperty: 'transform',
+    transitionDuration: '300ms',
+    transitionTimingFunction: 'ease-out',
+    '@media (hover: hover) and (pointer: fine)': {
+      ':hover': {
+        transform: 'translateY(-3px) scale(1.05)',
+      },
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      transitionDuration: '0ms',
+      transform: 'none',
+    },
   },
   details: {
     minWidth: 0,
@@ -251,6 +260,24 @@ const styles = stylex.create({
     lineHeight: 1.12,
     letterSpacing: '-0.035em',
     overflowWrap: 'anywhere',
+    transformOrigin: 'left center',
+    backgroundImage: 'linear-gradient(currentColor, currentColor)',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '50% 100%',
+    backgroundSize: '0% 2px',
+    transitionProperty: 'transform, background-size',
+    transitionDuration: '300ms',
+    transitionTimingFunction: 'ease-out',
+    '@media (hover: hover) and (pointer: fine)': {
+      ':hover': {
+        transform: 'scale(1.05)',
+        backgroundSize: '100% 2px',
+      },
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      transitionDuration: '0ms',
+      transform: 'none',
+    },
   },
   address: {
     display: 'inline-block',
@@ -333,46 +360,6 @@ const styles = stylex.create({
     flexWrap: 'wrap',
     gap: '9px',
     minWidth: 0,
-  },
-  link: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    minHeight: '38px',
-    maxWidth: '100%',
-    padding: '7px 12px 7px 8px',
-    borderRadius: '999px',
-    backgroundColor: 'rgba(224, 247, 255, 0.72)',
-    color: colors.ink,
-    fontSize: '13px',
-    lineHeight: 1.3,
-    overflowWrap: 'anywhere',
-    transitionProperty: 'background-color, border-color, color',
-    transitionDuration: '160ms',
-    ':hover': {
-      backgroundColor: colors.goldLight,
-      color: colors.darkPink,
-    },
-    ':focus-visible': {
-      outline: '2px solid #d97706',
-      outlineOffset: '2px',
-    },
-  },
-  linkIcon: {
-    display: 'grid',
-    width: '20px',
-    height: '20px',
-    flexShrink: 0,
-    placeItems: 'center',
-    overflow: 'hidden',
-    borderRadius: '50%',
-    outline: '1px solid rgba(175, 124, 73, 0.35)',
-    backgroundColor: 'rgba(224, 247, 255, 0.9)',
-  },
-  externalIcon: {
-    flexShrink: 0,
-    color: colors.goldDeep,
-    fontSize: '13px',
   },
   noLinks: {
     margin: 0,

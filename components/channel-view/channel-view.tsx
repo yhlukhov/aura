@@ -1,3 +1,5 @@
+'use client'
+
 import * as stylex from '@stylexjs/stylex'
 import Link from 'next/link'
 import type { Channel, Link as ChannelLink, Video } from '@/db/schema'
@@ -95,9 +97,9 @@ const styles = stylex.create({
     },
     transitionTimingFunction: 'ease-out',
     color: colors.warmBronze,
-    fontSize: '12px',
+    fontSize: '14px',
     fontWeight: 700,
-    letterSpacing: '0.16em',
+    letterSpacing: '0.12em',
     ':hover': {
       color: colors.darkPink,
     },

@@ -8,14 +8,18 @@ import { createChannelAction } from '@/actions/adminChannelActions'
 import type { NewChannel } from '@/db/schema'
 
 const countries = [
+  'Australia',
+  'Russia',
+  'Ukraine',
   'United Kingdom',
   'United States',
-  'Ukraine',
-  'Russia',
 ] satisfies NewChannel['country'][]
 
 export function CreateChannelForm() {
-  const [error, formAction, isPending] = useActionState(createChannelAction, null)
+  const [error, formAction, isPending] = useActionState(
+    createChannelAction,
+    null,
+  )
 
   return (
     <main {...stylex.props(styles.page)}>
@@ -163,7 +167,10 @@ export function CreateChannelForm() {
             />
           </label>
 
-          <fieldset data-create-channel-pricing {...stylex.props(styles.fieldset)}>
+          <fieldset
+            data-create-channel-pricing
+            {...stylex.props(styles.fieldset)}
+          >
             <legend {...stylex.props(styles.label)}>Pricing options</legend>
             <div {...stylex.props(styles.prices)}>
               <label {...stylex.props(styles.checkOption)}>
