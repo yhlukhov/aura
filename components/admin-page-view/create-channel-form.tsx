@@ -9,6 +9,7 @@ import type { NewChannel } from '@/db/schema'
 
 const countries = [
   'Australia',
+  'India',
   'Russia',
   'Ukraine',
   'United Kingdom',
