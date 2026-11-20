@@ -16,6 +16,11 @@ export function Header() {
 }
 
 //* Styles *//
+const goldShimmer = stylex.keyframes({
+  '0%': { backgroundPosition: '100% 50%' },
+  '100%': { backgroundPosition: '-100% 50%' },
+})
+
 const styles = stylex.create({
   header: {
     width: '100%',
@@ -32,9 +37,22 @@ const styles = stylex.create({
     fontWeight: 600,
     letterSpacing: '-0.025em',
     lineHeight: 1.05,
-    color: colors.darkPink,
-    textShadow:
-      '0 2px 0 rgba(251, 191, 36, 0.75), 0 4px 12px rgba(255, 255, 255, 0.75)',
+    backgroundImage:
+      'linear-gradient(100deg, #b45309 0%, #d97706 22%, #fbbf24 42%, #fff7cc 50%, #fbbf24 58%, #d97706 78%, #b45309 100%)',
+    backgroundSize: '220% 100%',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    color: 'transparent',
+    WebkitTextFillColor: 'transparent',
+    filter:
+      'drop-shadow(0 2px 0 rgba(255, 255, 255, 0.75)) drop-shadow(0 0 14px rgba(251, 191, 36, 0.55))',
+    animationName: goldShimmer,
+    animationDuration: '6s',
+    animationTimingFunction: 'linear',
+    animationIterationCount: 'infinite',
+    '@media (prefers-reduced-motion: reduce)': {
+      animationName: 'none',
+    },
   },
   subtitle: {
     fontSize: 'clamp(19px, 2.4vw, 26px)',
