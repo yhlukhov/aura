@@ -6,6 +6,7 @@ import {
   addLinkToChannel,
   addVideoToChannel,
   createChannel,
+  updateChannel,
   getChannel,
 } from '@/actions/channelActions'
 import {
@@ -144,6 +145,130 @@ export async function createChannelAction(
   }
 
   redirect(`/admin/channel/${createdChannel.id}`)
+}
+
+//* Update Channel Action *//
+export async function updateChannelAction(
+  _previousState: string | null,
+  formData: FormData,
+): Promise<string | null> {
+  const session = await auth.getSession()
+  if (session.data?.user.role !== 'admin') {
+    redirect('/')
+  }
+
+  const getValue = (name: string) => {
+    const value = formData.get(name)
+    return typeof value === 'string' ? value.trim() : ''
+  }
+
+  const channelIdValue = getValue('channelId')
+  const channelId = Number(channelIdValue)
+  if (!/^[1-9]\d*$/.test(channelIdValue) || !Number.isSafeInteger(channelId)) {
+    return 'This channel could not be found.'
+  }
+
+  const existingChannel = await getChannel(channelId)
+  if (!existingChannel) {
+    return 'This channel could not be found.'
+  }
+
+  const name = getValue('name')
+  const url = getValue('url')
+  const author = getValue('author')
+  const description = getValue('description')
+  const atAddress = getValue('atAddress')
+  const country = countryEnum.enumValues.find(
+    (option) => option === getValue('country'),
+  )
+  const imageUrl = getValue('imageUrl')
+  const topImageUrl = getValue('topImageUrl')
+  const createdAtValue = getValue('createdAt')
+  const language = languages.find((option) => option === getValue('language'))
+  const selectedPrices = formData.getAll('price')
+
+  if (
+    !name ||
+    !url ||
+    !author ||
+    !description ||
+    !atAddress ||
+    !country ||
+    !imageUrl ||
+    !topImageUrl ||
+    !createdAtValue
+  ) {
+    return 'Please complete all required fields.'
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(createdAtValue)) {
+    return 'Choose a valid channel creation date.'
+  }
+
+  const [year, month, day] = createdAtValue.split('-').map(Number)
+  const selectedDate = new Date(Date.UTC(year, month - 1, day, 12))
+  if (
+    selectedDate.getUTCFullYear() !== year ||
+    selectedDate.getUTCMonth() !== month - 1 ||
+    selectedDate.getUTCDate() !== day
+  ) {
+    return 'Choose a valid channel creation date.'
+  }
+
+  if (name.length > 255 || url.length > 255 || author.length > 255 || atAddress.length > 255) {
+    return 'Name, channel URL, author, and address must be 255 characters or fewer.'
+  }
+
+  if (!isValidWebUrl(url)) {
+    return 'Enter a valid channel URL starting with http:// or https://.'
+  }
+
+  if (!isValidImageUrl(imageUrl) || !isValidImageUrl(topImageUrl)) {
+    return 'Image URLs must be valid http(s) URLs or paths within this site.'
+  }
+
+  if (!language) {
+    return 'Choose a valid language.'
+  }
+
+  if (
+    selectedPrices.length === 0 ||
+    selectedPrices.some(
+      (price) => typeof price !== 'string' || !prices.some((option) => option === price),
+    )
+  ) {
+    return 'Choose at least one valid pricing option.'
+  }
+
+  const validPrices = selectedPrices.filter(
+    (price): price is (typeof prices)[number] =>
+      typeof price === 'string' && prices.some((option) => option === price),
+  )
+
+  const channel: NewChannel = {
+    name,
+    url,
+    author,
+    description,
+    atAddress,
+    country,
+    imageUrl,
+    topImageUrl,
+    language,
+    price: validPrices,
+    createdAt: selectedDate,
+  }
+
+  try {
+    await updateChannel(channelId, channel)
+  } catch (error) {
+    console.error('Failed to update channel', error)
+    return 'We could not update the channel. Please try again.'
+  }
+
+  revalidatePath(`/admin/channel/${channelId}`)
+  revalidatePath(`/channel/${channelId}`)
+  redirect(`/admin/channel/${channelId}`)
 }
 
 //* Add Video Action *//
