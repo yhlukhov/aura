@@ -36,9 +36,33 @@ export function ChannelItem({ channel }: { channel: Channel }) {
         <Link href={`/channel/${channel.id}`}>
           <div {...stylex.props(styles.description)}>{channel.description}</div>
         </Link>
+        {channelPriceMarkers(channel.price)}
       </div>
     </article>
   )
+}
+
+export function channelPriceMarkers(price: ("free" | "membership" | "donation")[] | null) {
+  {
+    return price && price.length > 0 && (
+      <ul aria-label='Pricing options' {...stylex.props(styles.prices)}>
+        {price.map((price, index) => (
+          <li key={`${price}-${index}`} {...stylex.props(styles.price)}>
+            <span
+              aria-hidden='true'
+              {...stylex.props(
+                styles.priceMarker,
+                price === 'free' && styles.freeMarker,
+                price === 'membership' && styles.membershipMarker,
+                price === 'donation' && styles.donationMarker,
+              )}
+            />
+            {price}
+          </li>
+        ))}
+      </ul>
+    )
+  }
 }
 
 //* Styles *//
@@ -150,6 +174,44 @@ const styles = stylex.create({
     gap: '6px',
     padding: '18px 20px 22px',
     flexGrow: 1,
+  },
+  prices: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginBlockStart: 'auto',
+    paddingBlockStart: '12px',
+    listStyle: 'none',
+    color: colors.mutedPlum,
+    fontFamily: 'Arial, Helvetica, sans-serif',
+    fontSize: '11px',
+    fontWeight: 600,
+  },
+  price: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '5px',
+    whiteSpace: 'nowrap',
+    textTransform: 'capitalize',
+  },
+  priceMarker: {
+    width: '10px',
+    height: '10px',
+    flexShrink: 0,
+    borderWidth: '2px',
+    borderStyle: 'solid',
+    paddingBottom: '2px',
+    backgroundColor: colors.white,
+    borderRadius: '50%',
+  },
+  freeMarker: {
+    borderColor: colors.green,
+  },
+  membershipMarker: {
+    borderColor: colors.sky,
+  },
+  donationMarker: {
+    borderColor: colors.gold,
   },
   name: {
     fontFamily: 'var(--font-spiritual-display), Georgia, serif',
