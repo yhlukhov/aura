@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { useActionState } from 'react'
-import stylex from '@stylexjs/stylex'
+import * as stylex from '@stylexjs/stylex'
 import { colors } from './tokens.stylex'
 import { createChannelAction } from '@/actions/adminChannelActions'
 import type { NewChannel } from '@/db/schema'
+import { breadcrumb } from './breadcrumb.stylex'
 
 const countries = [
   'Australia',
@@ -27,9 +28,13 @@ export function CreateChannelForm() {
     <main {...stylex.props(styles.page)}>
       <header {...stylex.props(styles.header)}>
         <p {...stylex.props(styles.eyebrow)}>
-          <Link href='/'>AURA</Link>
+          <Link href='/' {...stylex.props(breadcrumb.link)}>
+            AURA
+          </Link>
           {' · '}
-          <Link href='/admin'>ADMIN</Link>
+          <Link href='/admin' {...stylex.props(breadcrumb.link)}>
+            ADMIN
+          </Link>
         </p>
         <h1 {...stylex.props(styles.title)}>Create a channel</h1>
         <p {...stylex.props(styles.intro)}>
@@ -228,7 +233,7 @@ const styles = stylex.create({
   page: {
     minHeight: '100vh',
     boxSizing: 'border-box',
-    paddingBlock: 'clamp(28px, 6vw, 64px)',
+    paddingBlock: 'clamp(16px, 6vw, 32px)',
     paddingInline: 'clamp(16px, 5vw, 32px)',
     backgroundImage:
       'linear-gradient(180deg, rgba(224, 247, 255, 0.62), rgba(255, 247, 204, 0.54))',
@@ -251,6 +256,7 @@ const styles = stylex.create({
     color: colors.darkPink,
     fontFamily: 'var(--font-spiritual-display), Georgia, serif',
     fontSize: 'clamp(32px, 6vw, 52px)',
+    marginTop: '20px',
     fontWeight: 600,
     lineHeight: 1.1,
   },

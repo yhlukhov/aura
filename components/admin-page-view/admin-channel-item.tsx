@@ -4,6 +4,32 @@ import * as stylex from '@stylexjs/stylex'
 import type { Channel } from '@/db/schema'
 import { colors } from '../channel-list-view/tokens.stylex'
 
+export function AdminChannelItem({ channel }: { channel: Channel }) {
+  return (
+    <Link
+      href={`/admin/channel/${channel.id}`}
+      {...stylex.props(styles.card, stylex.defaultMarker())}
+    >
+      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackFar)} />
+      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackNear)} />
+      <div {...stylex.props(styles.imageWrapper)}>
+        <Image
+          src={channel.imageUrl}
+          alt=''
+          fill
+          sizes='180px'
+          {...stylex.props(styles.image)}
+        />
+      </div>
+      <div {...stylex.props(styles.body)}>
+        <h3 {...stylex.props(styles.name)}>{channel.name}</h3>
+        <h4 {...stylex.props(styles.author)}>{channel.atAddress}</h4>
+        <div {...stylex.props(styles.description)}>{channel.description}</div>
+      </div>
+    </Link>
+  )
+}
+
 const styles = stylex.create({
   card: {
     position: 'relative',
@@ -137,29 +163,3 @@ const styles = stylex.create({
     overflow: 'hidden',
   },
 })
-
-export function AdminChannelItem({ channel }: { channel: Channel }) {
-  return (
-    <Link
-      href={`/admin/channel/${channel.id}`}
-      {...stylex.props(styles.card, stylex.defaultMarker())}
-    >
-      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackFar)} />
-      <div aria-hidden='true' {...stylex.props(styles.stackLayer, styles.stackNear)} />
-      <div {...stylex.props(styles.imageWrapper)}>
-        <Image
-          src={channel.imageUrl}
-          alt=''
-          fill
-          sizes='180px'
-          {...stylex.props(styles.image)}
-        />
-      </div>
-      <div {...stylex.props(styles.body)}>
-        <h3 {...stylex.props(styles.name)}>{channel.name}</h3>
-        <h4 {...stylex.props(styles.author)}>{channel.atAddress}</h4>
-        <div {...stylex.props(styles.description)}>{channel.description}</div>
-      </div>
-    </Link>
-  )
-}
