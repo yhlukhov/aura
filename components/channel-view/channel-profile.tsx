@@ -8,6 +8,7 @@ import type { Channel, Link as ChannelLink } from '@/db/schema'
 import { colors } from '@/components/channel-list-view/tokens.stylex'
 import { channelActionButton } from './channel-action-button.stylex'
 import { ChannelLinkItem } from './channel-link-item'
+import { channelPriceMarkers } from '../channel-list-view/channel-item'
 
 type ChannelProfileData = Pick<
   Channel,
@@ -19,6 +20,7 @@ type ChannelProfileData = Pick<
   | 'description'
   | 'imageUrl'
   | 'topImageUrl'
+  | 'price'
 > & { links: ChannelLink[] }
 
 export function ChannelProfile({
@@ -131,6 +133,8 @@ export function ChannelProfile({
               {isExpanded ? 'Show less' : '… Show more'}
             </button>
           )}
+
+          {channelPriceMarkers(channel.price)}
 
           <nav
             aria-label={`${channel.name} links`}
