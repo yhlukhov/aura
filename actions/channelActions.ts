@@ -30,6 +30,12 @@ export function createChannel(channel: NewChannel) {
   }).returning({ id: channels.id })
 }
 
+export function updateChannel(id: number, channel: NewChannel) {
+  return db.update(channels).set({
+    ...channel
+  }).where(eq(channels.id, id))
+}
+
 export function addVideoToChannel(channelId: number, video: NewVideo) {
   return db.insert(videos).values({...video})
 }

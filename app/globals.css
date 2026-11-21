@@ -45,7 +45,8 @@
     border: 1px solid rgba(2, 132, 199, 0.24) !important;
   }
 
-  button[data-channel-description-toggle] {
+  button[data-channel-description-toggle],
+  button[data-admin-logout] {
     border: none !important;
   }
 }

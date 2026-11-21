@@ -6,6 +6,7 @@ import * as stylex from '@stylexjs/stylex'
 import { addLinkAction } from '@/actions/adminChannelActions'
 import { colors } from '@/components/channel-list-view/tokens.stylex'
 import type { Channel } from '@/db/schema'
+import { breadcrumb } from './breadcrumb.stylex'
 
 export function AddLinkForm({ channel }: { channel: Channel }) {
   const [error, formAction, isPending] = useActionState(addLinkAction, null)
@@ -14,13 +15,17 @@ export function AddLinkForm({ channel }: { channel: Channel }) {
     <main {...stylex.props(styles.page)}>
       <header {...stylex.props(styles.header)}>
         <nav aria-label='Breadcrumb' {...stylex.props(styles.eyebrow)}>
-          <Link href='/'>AURA</Link>
+          <Link href='/' {...stylex.props(breadcrumb.link)}>
+            AURA
+          </Link>
           <span aria-hidden='true'>·</span>
-          <Link href='/admin'>ADMIN</Link>
+          <Link href='/admin' {...stylex.props(breadcrumb.link)}>
+            ADMIN
+          </Link>
           <span aria-hidden='true'>·</span>
           <Link
             href={`/admin/channel/${channel.id}`}
-            {...stylex.props(styles.breadcrumbChannel)}
+            {...stylex.props(breadcrumb.link, breadcrumb.channel)}
           >
             {channel.name}
           </Link>
@@ -109,7 +114,7 @@ const styles = stylex.create({
   page: {
     minHeight: '100vh',
     boxSizing: 'border-box',
-    paddingBlock: 'clamp(28px, 6vw, 64px)',
+    paddingBlock: 'clamp(16px, 6vw, 32px)',
     paddingInline: 'clamp(16px, 5vw, 32px)',
     backgroundImage:
       'linear-gradient(180deg, rgba(224, 247, 255, 0.62), rgba(255, 247, 204, 0.54))',
@@ -132,11 +137,8 @@ const styles = stylex.create({
     fontWeight: 700,
     letterSpacing: '0.16em',
   },
-  breadcrumbChannel: {
-    textTransform: 'capitalize',
-  },
   title: {
-    margin: 0,
+    marginTop: '30px',
     color: colors.darkPink,
     fontFamily: 'var(--font-spiritual-display), Georgia, serif',
     fontSize: 'clamp(32px, 6vw, 52px)',

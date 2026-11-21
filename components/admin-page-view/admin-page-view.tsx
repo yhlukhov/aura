@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import stylex from '@stylexjs/stylex'
+import * as stylex from '@stylexjs/stylex'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { authClient } from '@/lib/auth/client'
 import { colors } from '@/components/channel-list-view/tokens.stylex'
 import { Channel } from '@/db/schema'
 import { AdminChannelList } from './admin-channel-list'
+import { breadcrumb } from './breadcrumb.stylex'
 
 type ErrorType = {
   code?: string | undefined
@@ -33,8 +34,9 @@ export function AdminPageView({channels}: {channels: Channel[]}) {
     <main {...stylex.props(styles.main)}>
       <header {...stylex.props(styles.header)}>
         <p {...stylex.props(styles.eyebrow)}>
-          <Link href='/'>AURA</Link>
-          {' · ADMIN'}
+          <Link href='/' {...stylex.props(breadcrumb.link)}>
+            AURA
+          </Link>
         </p>
         <h1 {...stylex.props(styles.title)}>Admin Page</h1>
         <p {...stylex.props(styles.intro)}>
@@ -44,6 +46,7 @@ export function AdminPageView({channels}: {channels: Channel[]}) {
       <div {...stylex.props(styles.logout)}>
         <button
           type="button"
+          data-admin-logout
           {...stylex.props(styles.logoutUrl)}
           onClick={handleSignOut}
         >
@@ -111,25 +114,26 @@ const styles = stylex.create({
     maxWidth: 'min(320px, calc(100vw - 32px))',
   },
   logoutUrl: {
-    paddingBlock: '10px',
-    paddingInline: 'clamp(8px, 2vw, 18px)',
-    border: '1px solid',
-    borderColor: colors.darkPink,
-    borderRadius: '999px',
-    backgroundColor: colors.darkPink,
-    color: colors.white,
+    padding: 0,
+    backgroundColor: 'transparent',
+    color: colors.darkPink,
     font: 'inherit',
+    fontSize: '14px',
     fontWeight: 600,
+    textDecoration: 'underline',
+    textDecorationColor: 'rgba(129, 71, 110, 0.4)',
+    textUnderlineOffset: '5px',
     cursor: 'pointer',
-    transition: 'background-color 150ms ease, color 150ms ease',
+    transition: 'color 180ms ease, text-decoration-color 180ms ease',
     ':hover': {
-      backgroundColor: colors.white,
-      color: colors.darkPink,
+      color: colors.goldDeep,
+      textDecorationColor: colors.goldDeep,
     },
     ':focus-visible': {
-      outline: '3px solid',
+      outline: '2px solid',
       outlineColor: colors.gold,
       outlineOffset: '3px',
+      borderRadius: '2px',
     },
   },
   error: {

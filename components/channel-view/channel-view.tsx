@@ -24,16 +24,7 @@ export function ChannelView({
   showAddVideo?: boolean
 }) {
   if (!channel) {
-    return (
-      <main {...stylex.props(styles.root)}>
-        <div {...stylex.props(styles.content)}>
-          <Link href='/' {...stylex.props(styles.breadcrumb)}>
-            AURA
-          </Link>
-          <p {...stylex.props(styles.notFound)}>{emptyMessage}</p>
-        </div>
-      </main>
-    )
+    return <NoChannelFound message={emptyMessage} />
   }
 
   const { videos, ...channelProfile } = channel
@@ -41,19 +32,50 @@ export function ChannelView({
   return (
     <main {...stylex.props(styles.root)}>
       <div {...stylex.props(styles.content)}>
-        <Link href='/' {...stylex.props(styles.breadcrumb)}>
-          AURA SPACE
-        </Link>
+        {showAddVideo ? (
+          <nav aria-label='Breadcrumb' {...stylex.props(styles.breadcrumbNav)}>
+            <Link href='/' {...stylex.props(styles.breadcrumb)}>
+              Aura
+            </Link>
+            <span aria-hidden='true' {...stylex.props(styles.breadcrumbSeparator)}>
+              ·
+            </span>
+            <Link href='/admin' {...stylex.props(styles.breadcrumb)}>
+              Admin
+            </Link>
+          </nav>
+        ) : (
+          <div {...stylex.props(styles.breadcrumbCenter)}>
+            <Link href='/' {...stylex.props(styles.breadcrumb)}>
+              AURA SPACE
+            </Link>
+          </div>
+        )}
         <ChannelProfile
           channel={channelProfile}
           videoCount={videos.length}
           editHref={editHref}
         />
-        <ChannelVideoList channelId={channel.id} videos={videos} showAddVideo={showAddVideo} />
+        <ChannelVideoList
+          channelId={channel.id}
+          videos={videos}
+          showAddVideo={showAddVideo}
+        />
       </div>
     </main>
   )
 }
+
+const NoChannelFound = ({ message }: { message: string }) => (
+  <main {...stylex.props(styles.root)}>
+    <div {...stylex.props(styles.content)}>
+      <Link href='/' {...stylex.props(styles.breadcrumb)}>
+        AURA SPACE
+      </Link>
+      <p {...stylex.props(styles.notFound)}>{message}</p>
+    </div>
+  </main>
+)
 
 const styles = stylex.create({
   root: {
@@ -79,18 +101,38 @@ const styles = stylex.create({
     paddingInline: 'clamp(16px, 3.2vw, 48px)',
     paddingBlockEnd: '64px',
   },
+  breadcrumbNav: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: '8px',
+    marginBlock: '8px',
+  },
+  breadcrumbSeparator: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    color: colors.warmBronze,
+    fontSize: '14px',
+    fontWeight: 700,
+    lineHeight: 1,
+  },
+  breadcrumbCenter: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBlock: '4px',
+  },
   breadcrumb: {
-    display: 'block',
+    display: 'inline-block',
+    lineHeight: 1,
+    paddingBottom: '1px',
     marginBlock: '8px',
     textAlign: 'center',
-    transform: {
-      default: 'scale(1)',
-      '@media (hover: hover) and (pointer: fine)': {
-        ':hover': 'scale(1.05)',
-      },
-      '@media (prefers-reduced-motion: reduce)': 'none',
-    },
-    transitionProperty: 'transform, color',
+    backgroundImage: 'linear-gradient(currentColor, currentColor)',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '50% 100%',
+    backgroundSize: '0% 2px',
+    transitionProperty: 'color, background-size',
     transitionDuration: {
       default: '180ms',
       '@media (prefers-reduced-motion: reduce)': '0ms',
@@ -100,8 +142,10 @@ const styles = stylex.create({
     fontSize: '14px',
     fontWeight: 700,
     letterSpacing: '0.12em',
+    textTransform: 'uppercase',
     ':hover': {
       color: colors.darkPink,
+      backgroundSize: '100% 2px',
     },
     ':focus-visible': {
       outline: '2px solid',
