@@ -8,7 +8,6 @@ import type { Channel, Link as ChannelLink } from '@/db/schema'
 import { colors } from '@/components/channel-list-view/tokens.stylex'
 import { channelActionButton } from './channel-action-button.stylex'
 import { ChannelLinkItem } from './channel-link-item'
-import { channelPriceMarkers } from '../channel-list-view/channel-item'
 
 type ChannelProfileData = Pick<
   Channel,
@@ -162,6 +161,29 @@ export function ChannelProfile({
       </div>
     </header>
   )
+}
+
+function channelPriceMarkers(price: ("free" | "membership" | "donation")[] | null) {
+  {
+    return price && price.length > 0 && (
+      <ul aria-label='Pricing options' {...stylex.props(styles.prices)}>
+        {price.map((price, index) => (
+          <li key={`${price}-${index}`} {...stylex.props(styles.price)}>
+            <span
+              aria-hidden='true'
+              {...stylex.props(
+                styles.priceMarker,
+                price === 'free' && styles.freeMarker,
+                price === 'membership' && styles.membershipMarker,
+                price === 'donation' && styles.donationMarker,
+              )}
+            />
+            {price}
+          </li>
+        ))}
+      </ul>
+    )
+  }
 }
 
 const styles = stylex.create({
@@ -369,5 +391,44 @@ const styles = stylex.create({
     margin: 0,
     color: colors.mutedPlum,
     fontSize: '13px',
+  },
+  prices: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginBlockStart: 'auto',
+    paddingBlockStart: '12px',
+    listStyle: 'none',
+    color: colors.mutedPlum,
+    fontFamily: 'Arial, Helvetica, sans-serif',
+    fontSize: '11px',
+    fontWeight: 600,
+  },
+  price: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '5px',
+    whiteSpace: 'nowrap',
+    color: colors.mutedPlumLight,
+    textTransform: 'capitalize',
+  },
+  priceMarker: {
+    width: '10px',
+    height: '10px',
+    flexShrink: 0,
+    borderWidth: '2px',
+    borderStyle: 'solid',
+    paddingBottom: '2px',
+    backgroundColor: colors.white,
+    borderRadius: '50%',
+  },
+  freeMarker: {
+    borderColor: colors.green,
+  },
+  membershipMarker: {
+    borderColor: colors.sky,
+  },
+  donationMarker: {
+    borderColor: colors.gold,
   },
 })

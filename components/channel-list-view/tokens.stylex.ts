@@ -14,5 +14,6 @@ export const colors = stylex.defineVars({
   darkPink: '#81476e',
   warmBronze: '#895b2d',
   mutedPlum: '#5e5265',
+  mutedPlumLight: '#5e5265da',
   white: '#ffffff',
 })

@@ -45,6 +45,10 @@
     border: 1px solid rgba(2, 132, 199, 0.24) !important;
   }
 
+  select[data-channel-filter] {
+    border: none !important;
+  }
+
   button[data-channel-description-toggle],
   button[data-admin-logout] {
     border: none !important;

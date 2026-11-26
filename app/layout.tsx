@@ -4,6 +4,7 @@ import {
   Lora,
   Playfair_Display,
 } from "next/font/google";
+import {Providers} from "@/components/providers";
 import "./globals.css";
 
 const spiritualDisplay = Cormorant_Garamond({
@@ -40,7 +41,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${spiritualDisplay.variable} ${spiritualItalic.variable} ${spiritualClassic.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

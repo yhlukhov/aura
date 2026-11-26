@@ -5,18 +5,9 @@ import { useActionState } from 'react'
 import * as stylex from '@stylexjs/stylex'
 import { colors } from './tokens.stylex'
 import { updateChannelAction } from '@/actions/adminChannelActions'
-import type { Channel, NewChannel } from '@/db/schema'
+import type { Channel } from '@/db/schema'
 import { breadcrumb } from './breadcrumb.stylex'
-
-const countries = [
-  'Australia',
-  'India',
-  'Russia',
-  'Turkey',
-  'Ukraine',
-  'United Kingdom',
-  'United States',
-] satisfies NewChannel['country'][]
+import { countries } from './utils'
 
 const prices = ['free', 'membership', 'donation'] as const
 

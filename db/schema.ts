@@ -18,6 +18,7 @@ export const languageEnum = pgEnum('channel_language', [
 ])
 export const countryEnum = pgEnum('channel_country', [
   'Australia',
+  'Canada',
   'India',
   'Russia',
   'Turkey',
