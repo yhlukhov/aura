@@ -1,7 +1,14 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { and, eq, sql, type SQL } from 'drizzle-orm'
 import { auth } from '@/lib/auth/server'
-import { countryEnum, type NewChannel } from '@/db/schema'
+import {
+  channels,
+  countryEnum,
+  languageEnum,
+  type Channel,
+  type NewChannel,
+} from '@/db/schema'
 
 export const prices = ['free', 'membership', 'donation'] as const
 export const languages = ['silent', 'english', 'russian', 'ukrainian'] as const
@@ -9,6 +16,74 @@ export const languages = ['silent', 'english', 'russian', 'ukrainian'] as const
 export const MAX_TEXT_LENGTH = 255
 export const MAX_INT = 2147483647
 const MIN_DURATION = 1
+
+export interface ChannelCursor {
+  sortKey: string
+  id: number
+}
+
+export function validateChannelOrderingSeed(seed: string) {
+  if (!seed || seed.length > 128) {
+    throw new Error('Invalid channel ordering seed.')
+  }
+}
+
+export function parseChannelLanguageFilter(value: string) {
+  const language = languageEnum.enumValues.find((option) => option === value)
+  if (value && !language) {
+    throw new Error('Invalid channel language filter.')
+  }
+  return language
+}
+
+export function parseChannelCountryFilter(value: string) {
+  const country = countryEnum.enumValues.find((option) => option === value)
+  if (value && !country) {
+    throw new Error('Invalid channel country filter.')
+  }
+  return country
+}
+
+export function validateChannelPaginationCursor(
+  cursor: ChannelCursor | null,
+) {
+  if (
+    cursor &&
+    (!/^[a-f\d]{32}$/.test(cursor.sortKey) ||
+      !Number.isSafeInteger(cursor.id) ||
+      cursor.id < 1)
+  ) {
+    throw new Error('Invalid channel pagination cursor.')
+  }
+}
+
+export function buildChannelConditions({
+  language,
+  country,
+  cursor,
+  sortExpression,
+}: {
+  language: Channel['language'] | undefined
+  country: Channel['country'] | undefined
+  cursor: ChannelCursor | null
+  sortExpression: SQL<string>
+}) {
+  const conditions: SQL[] = []
+
+  if (language) {
+    conditions.push(eq(channels.language, language))
+  }
+  if (country) {
+    conditions.push(eq(channels.country, country))
+  }
+  if (cursor) {
+    conditions.push(
+      sql`(${sortExpression}, ${channels.id}) > (${cursor.sortKey}, ${cursor.id})`,
+    )
+  }
+
+  return conditions.length > 0 ? and(...conditions) : undefined
+}
 
 export async function requireAdmin() {
   const session = await auth.getSession()

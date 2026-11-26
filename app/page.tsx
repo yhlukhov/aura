@@ -1,4 +1,5 @@
-import stylex from '@stylexjs/stylex'
+import { randomUUID } from 'node:crypto'
+import { connection } from 'next/server'
 import { getChannels } from '@/actions/channelActions'
 import { ChannelListView } from '@/components/channel-list-view/channel-list-view'
 import { countryEnum, languageEnum } from '@/db/schema'
@@ -6,21 +7,23 @@ import { countryEnum, languageEnum } from '@/db/schema'
 export const instant = false
 
 export default async function Home() {
-  'use cache'
-  const channels = await getChannels()
+  await connection()
+  const seed = randomUUID()
+  const initialPage = await getChannels({
+    seed,
+    language: '',
+    country: '',
+    cursor: null,
+  })
 
   return (
-    <main {...stylex.props(styles.main)}>
+    <main>
       <ChannelListView
-        channels={channels}
+        initialPage={initialPage}
+        seed={seed}
         countryOptions={countryEnum.enumValues}
         languageOptions={languageEnum.enumValues}
       />
     </main>
   )
 }
-
-//* Styles *//
-const styles = stylex.create({
-  main: {},
-})

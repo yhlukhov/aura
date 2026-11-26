@@ -1,51 +1,107 @@
 import stylex from '@stylexjs/stylex'
 import { useAtomValue } from 'jotai'
-import { useEffect, useRef, useState } from 'react'
-import { fetchFilteredChannels } from '@/actions/channelFilterActions'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { countryAtom, languageAtom } from '@/lib/store'
+import type { ChannelCursor } from '@/actions/utils'
 import type { Channel } from '@/db/schema'
+import type { ChannelPage } from '@/actions/channelActions'
 import { colors } from './tokens.stylex'
 import { ChannelItem } from './channel-item'
 import { ChannelFilters } from './channel-filters'
+import {
+  useFetchPage,
+  useObserveLoadNextPage,
+  useSyncChannelQuery,
+} from './channel-list-hooks'
 
 interface Props {
-  channels: Channel[]
+  initialPage: ChannelPage
+  seed: string
   countryOptions: readonly Channel['country'][]
   languageOptions: readonly Channel['language'][]
 }
 
 export function ChannelList({
-  channels,
+  initialPage,
+  seed,
   countryOptions,
   languageOptions,
 }: Props) {
   const language = useAtomValue(languageAtom)
   const country = useAtomValue(countryAtom)
-  const [visibleChannels, setVisibleChannels] = useState(channels)
+  const [visibleChannels, setVisibleChannels] = useState(initialPage.channels)
+  const [loadedQuery, setLoadedQuery] = useState({
+    seed,
+    language: '',
+    country: '',
+  })
+  const [cursor, setCursor] = useState<ChannelCursor | null>(
+    initialPage.nextCursor,
+  )
+  const [hasMore, setHasMore] = useState(initialPage.hasMore)
+  const [isLoading, setIsLoading] = useState(true)
+  const [filtersHydrated, setFiltersHydrated] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const requestId = useRef(0)
+  const loadingRef = useRef(false)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const lastQueryRef = useRef({ seed, language: '', country: '' })
+  const queryMatchesLoadedChannels =
+    loadedQuery.seed === seed &&
+    loadedQuery.language === language &&
+    loadedQuery.country === country
 
   useEffect(() => {
-    const currentRequestId = ++requestId.current
+    setFiltersHydrated(true)
+  }, [])
 
-    fetchFilteredChannels({ language, country })
-      .then((results) => {
-        if (currentRequestId === requestId.current) {
-          setVisibleChannels(results)
-          setLoadError(null)
-        }
-      })
-      .catch((error: unknown) => {
-        if (currentRequestId === requestId.current) {
-          console.error('Failed to load filtered channels.', error)
-          setLoadError('Unable to load channels. Please try again.')
-        }
-      })
+  const fetchPage = useFetchPage({
+    seed,
+    language,
+    country,
+    requestId,
+    loadingRef,
+    setVisibleChannels,
+    setLoadedQuery,
+    setCursor,
+    setHasMore,
+    setIsLoading,
+    setLoadError,
+  })
 
-    return () => {
-      requestId.current += 1
+  const loadNextPage = useCallback(() => {
+    if (queryMatchesLoadedChannels && hasMore && cursor) {
+      void fetchPage(cursor, true)
     }
-  }, [country, language])
+  }, [cursor, fetchPage, hasMore, queryMatchesLoadedChannels])
+
+  useSyncChannelQuery({
+    filtersHydrated,
+    seed,
+    language,
+    country,
+    lastQueryRef,
+    initialPage,
+    requestId,
+    loadingRef,
+    fetchPage,
+    setVisibleChannels,
+    setLoadedQuery,
+    setCursor,
+    setHasMore,
+    setIsLoading,
+    setLoadError,
+  })
+
+  useObserveLoadNextPage({
+    sentinelRef,
+    filtersHydrated,
+    queryMatchesLoadedChannels,
+    hasMore,
+    isLoading,
+    loadError,
+    loadNextPage,
+  })
 
   return (
     <section {...stylex.props(styles.section)}>
@@ -55,14 +111,35 @@ export function ChannelList({
       />
       <div {...stylex.props(styles.flex)}>
         <div aria-hidden="true" {...stylex.props(styles.backdrop)} />
-        {visibleChannels.map((channel) => (
+        {filtersHydrated &&
+          queryMatchesLoadedChannels &&
+          visibleChannels.map((channel) => (
           <ChannelItem key={channel.id} channel={channel} />
         ))}
       </div>
-      {loadError && (
-        <p role="alert" {...stylex.props(styles.error)}>
-          {loadError}
+      <div
+        ref={sentinelRef}
+        aria-hidden="true"
+        {...stylex.props(styles.sentinel)}
+      />
+      {(isLoading || !filtersHydrated) && (
+        <p aria-live="polite" {...stylex.props(styles.status)}>
+          Loading channels…
         </p>
+      )}
+      {loadError && (
+        <div {...stylex.props(styles.errorContainer)}>
+          <p role="alert" {...stylex.props(styles.error)}>
+            {loadError}
+          </p>
+          <button
+            type="button"
+            onClick={() => void fetchPage(cursor, cursor !== null)}
+            {...stylex.props(styles.retry)}
+          >
+            Retry
+          </button>
+        </div>
       )}
     </section>
   )
@@ -104,9 +181,37 @@ const styles = stylex.create({
     width: 'min(100%, 1400px)',
   },
   error: {
-    marginBlock: '20px 0',
+    margin: 0,
     color: colors.darkPink,
     fontSize: '14px',
     textAlign: 'center',
+  },
+  sentinel: {
+    width: '100%',
+    height: '1px',
+  },
+  status: {
+    marginBlock: '14px 0',
+    color: colors.mutedPlum,
+    fontSize: '14px',
+    textAlign: 'center',
+  },
+  errorContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: '10px',
+    marginBlock: '14px 0',
+  },
+  retry: {
+    border: '1px solid',
+    borderColor: colors.warmBronze,
+    borderRadius: '6px',
+    padding: '4px 10px',
+    color: colors.darkPink,
+    backgroundColor: 'transparent',
+    font: 'inherit',
+    cursor: 'pointer',
   },
 })

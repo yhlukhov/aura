@@ -2,17 +2,20 @@
 
 import stylex from '@stylexjs/stylex'
 import { Header } from './header'
+import type { ChannelPage } from '@/actions/channelActions'
 import type { Channel } from '@/db/schema'
 import { ChannelList } from './channel-list'
 import { colors } from './tokens.stylex'
 import { Stars } from './stars'
 
 export function ChannelListView({
-  channels,
+  initialPage,
+  seed,
   countryOptions,
   languageOptions,
 }: {
-  channels: Channel[]
+  initialPage: ChannelPage
+  seed: string
   countryOptions: readonly Channel['country'][]
   languageOptions: readonly Channel['language'][]
 }) {
@@ -23,7 +26,8 @@ export function ChannelListView({
       <div {...stylex.props(styles.content)}>
         <Header />
         <ChannelList
-          channels={channels}
+          initialPage={initialPage}
+          seed={seed}
           countryOptions={countryOptions}
           languageOptions={languageOptions}
         />
