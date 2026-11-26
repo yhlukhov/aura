@@ -1,48 +1,80 @@
 import { db } from "@/db";
-import { and, eq } from "drizzle-orm";
+import { asc, eq, getTableColumns, sql } from "drizzle-orm";
 import {
-  channels,
-  countryEnum,
-  languageEnum,
-  NewChannel,
-  links,
-  videos,
-  type NewLink,
-  type NewVideo,
+ buildChannelConditions,
+ parseChannelCountryFilter,
+ parseChannelLanguageFilter,
+ validateChannelOrderingSeed,
+ validateChannelPaginationCursor,
+ type ChannelCursor,
+} from '@/actions/utils'
+import {
+ channels,
+ NewChannel,
+ links,
+ videos,
+ type Channel,
+ type NewLink,
+ type NewVideo,
 } from "@/db/schema";
 
-export function getAllChannels() {
-  return db.select().from(channels)
+const CHANNEL_PAGE_SIZE = 12
+
+export interface ChannelPage {
+ channels: Channel[]
+ nextCursor: ChannelCursor | null
+ hasMore: boolean
 }
 
-export async function getChannels(
-  filters: { language?: string; country?: string } = {},
-) {
-  const language = languageEnum.enumValues.find(
-    (option) => option === filters.language,
-  )
-  const country = countryEnum.enumValues.find(
-    (option) => option === filters.country,
-  )
-  if (filters.language && !language) {
-    throw new Error('Invalid channel language filter.')
-  }
-  if (filters.country && !country) {
-    throw new Error('Invalid channel country filter.')
-  }
+export interface ChannelPageRequest {
+ seed: string
+ language: string
+ country: string
+ cursor: ChannelCursor | null
+}
 
-  const conditions = []
-  if (language) {
-    conditions.push(eq(channels.language, language))
-  }
-  if (country) {
-    conditions.push(eq(channels.country, country))
-  }
+export function getAllChannels() {
+ return db.select().from(channels)
+}
 
-  const query = db.select().from(channels)
-  return conditions.length > 0
-    ? query.where(and(...conditions)).limit(12).offset(0)
-    : query.limit(12).offset(0)
+export async function getChannels({
+ seed,
+ language: languageFilter,
+ country: countryFilter,
+ cursor,
+}: ChannelPageRequest): Promise<ChannelPage> {
+  validateChannelOrderingSeed(seed)
+  const language = parseChannelLanguageFilter(languageFilter)
+  const country = parseChannelCountryFilter(countryFilter)
+  validateChannelPaginationCursor(cursor)
+
+  const sortExpression = sql<string>`md5(${seed} || ':' || ${channels.id}::text)`
+  const conditions = buildChannelConditions({
+    language,
+    country,
+    cursor,
+    sortExpression,
+  })
+
+  const rows = await db
+    .select({ ...getTableColumns(channels), sortKey: sortExpression })
+    .from(channels)
+    .where(conditions)
+    .orderBy(asc(sortExpression), asc(channels.id))
+    .limit(CHANNEL_PAGE_SIZE + 1)
+
+  const hasMore = rows.length > CHANNEL_PAGE_SIZE
+  const pageRows = rows.slice(0, CHANNEL_PAGE_SIZE)
+  const lastRow = pageRows.at(-1)
+
+  return {
+    channels: pageRows.map(({ sortKey: _sortKey, ...channel }) => channel),
+    nextCursor:
+      hasMore && lastRow
+        ? { sortKey: lastRow.sortKey, id: lastRow.id }
+        : null,
+    hasMore,
+  }
 }
 
 export function getChannel(id: number) {

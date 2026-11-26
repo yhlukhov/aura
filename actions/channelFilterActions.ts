@@ -1,10 +1,8 @@
 'use server'
 
 import { getChannels } from '@/actions/channelActions'
+import type { ChannelPageRequest } from '@/actions/channelActions'
 
-export async function fetchFilteredChannels(filters: {
-  language: string
-  country: string
-}) {
-  return getChannels(filters)
+export async function fetchChannelPage(request: ChannelPageRequest) {
+  return getChannels(request)
 }
