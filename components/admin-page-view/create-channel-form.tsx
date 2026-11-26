@@ -5,18 +5,8 @@ import { useActionState } from 'react'
 import * as stylex from '@stylexjs/stylex'
 import { colors } from './tokens.stylex'
 import { createChannelAction } from '@/actions/adminChannelActions'
-import type { NewChannel } from '@/db/schema'
 import { breadcrumb } from './breadcrumb.stylex'
-
-const countries = [
-  'Australia',
-  'India',
-  'Russia',
-  'Turkey',
-  'Ukraine',
-  'United Kingdom',
-  'United States',
-] satisfies NewChannel['country'][]
+import { countries } from './utils'
 
 export function CreateChannelForm() {
   const [error, formAction, isPending] = useActionState(

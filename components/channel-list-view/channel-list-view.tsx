@@ -7,14 +7,26 @@ import { ChannelList } from './channel-list'
 import { colors } from './tokens.stylex'
 import { Stars } from './stars'
 
-export function ChannelListView({ channels }: { channels: Channel[] }) {
+export function ChannelListView({
+  channels,
+  countryOptions,
+  languageOptions,
+}: {
+  channels: Channel[]
+  countryOptions: readonly Channel['country'][]
+  languageOptions: readonly Channel['language'][]
+}) {
 
   return (
     <div {...stylex.props(styles.root)}>
       <Stars />
       <div {...stylex.props(styles.content)}>
         <Header />
-        <ChannelList channels={channels} />
+        <ChannelList
+          channels={channels}
+          countryOptions={countryOptions}
+          languageOptions={languageOptions}
+        />
       </div>
     </div>
   )

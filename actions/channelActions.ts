@@ -1,7 +1,9 @@
 import { db } from "@/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import {
   channels,
+  countryEnum,
+  languageEnum,
   NewChannel,
   links,
   videos,
@@ -13,8 +15,34 @@ export function getAllChannels() {
   return db.select().from(channels)
 }
 
-export function getChannels(limit=12, offset=0) {
-  return db.select().from(channels).limit(limit).offset(offset)
+export async function getChannels(
+  filters: { language?: string; country?: string } = {},
+) {
+  const language = languageEnum.enumValues.find(
+    (option) => option === filters.language,
+  )
+  const country = countryEnum.enumValues.find(
+    (option) => option === filters.country,
+  )
+  if (filters.language && !language) {
+    throw new Error('Invalid channel language filter.')
+  }
+  if (filters.country && !country) {
+    throw new Error('Invalid channel country filter.')
+  }
+
+  const conditions = []
+  if (language) {
+    conditions.push(eq(channels.language, language))
+  }
+  if (country) {
+    conditions.push(eq(channels.country, country))
+  }
+
+  const query = db.select().from(channels)
+  return conditions.length > 0
+    ? query.where(and(...conditions)).limit(12).offset(0)
+    : query.limit(12).offset(0)
 }
 
 export function getChannel(id: number) {
