@@ -4,6 +4,7 @@ export const countries = [
   'Australia',
   'Canada',
   'India',
+  'Norway',
   'Russia',
   'Turkey',
   'Ukraine',

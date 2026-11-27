@@ -9,12 +9,6 @@ const nextConfig: NextConfig = {
       new URL('https://encrypted-tbn**.gstatic.com/**'),
     ],
   },
-  logging: {
-    //! Remove for production usage
-    fetches: {
-      fullUrl: true,
-    },
-  },
 }
 
 export default nextConfig;
